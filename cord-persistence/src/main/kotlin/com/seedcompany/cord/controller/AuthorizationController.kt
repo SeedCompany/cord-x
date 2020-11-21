@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/user")
-class UserController(
+@RequestMapping("/authorization")
+class AuthorizationController(
         val userRepo: UserRepository
 ){
 
     @GetMapping("/create/{name}")
     suspend fun create(@PathVariable("name") name: String): String{
-        val user = User(name)
-        userRepo.save(user).awaitFirstOrNull()
+//        val user = User(name)
+//        userRepo.save(user).awaitFirstOrNull()
         return "user $name created"
     }
 

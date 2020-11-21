@@ -21,7 +21,7 @@ class Database{
             .setConfig(BoltConnector.enabled, true)
             .setConfig(
                     BoltConnector.listen_address,
-                    SocketAddress("localhost", 7002))
+                    SocketAddress("localhost", 7687))
             .build()
     private final val db: GraphDatabaseService
     private final val driver: Driver
@@ -31,7 +31,7 @@ class Database{
         Runtime.getRuntime().addShutdownHook(Thread(managementService::shutdown))
         driver =
                 GraphDatabase.driver(
-                        "bolt://localhost:7002",
+                        "bolt://localhost:7687",
                         AuthTokens.basic(
                                 "neo4j",
                                 "neo4j"))

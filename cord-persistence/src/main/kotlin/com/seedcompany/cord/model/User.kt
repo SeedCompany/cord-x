@@ -5,7 +5,15 @@ import org.springframework.data.neo4j.core.schema.Relationship
 
 @Node
 class User(
-        val name: String,
-        @Relationship(type="name", direction = Relationship.Direction.OUTGOING)
-        var names: List<PropertyRelationship>
-): BaseNode()
+        var name: String,
+): BaseNode() {
+        @Relationship(type="name")
+        var _name: MutableList<StringPropertyRelationship> = mutableListOf()
+
+        init {
+                val nameProp = StringProp(name)
+                val nameRel = StringPropertyRelationship(true, nameProp)
+                _name.add(nameRel)
+        }
+
+}
