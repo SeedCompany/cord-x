@@ -8,6 +8,7 @@ import org.neo4j.driver.Driver
 import org.neo4j.driver.GraphDatabase
 import org.neo4j.graphdb.GraphDatabaseService
 import org.springframework.context.annotation.Bean
+import org.springframework.data.neo4j.core.Neo4jClient
 import org.springframework.data.neo4j.core.transaction.ReactiveNeo4jTransactionManager
 import org.springframework.stereotype.Component
 import org.springframework.transaction.ReactiveTransactionManager
@@ -25,6 +26,7 @@ class Database{
             .build()
     private final val db: GraphDatabaseService
     private final val driver: Driver
+    private final val client: Neo4jClient
 
     init {
         db = managementService.database("neo4j")
@@ -35,6 +37,7 @@ class Database{
                         AuthTokens.basic(
                                 "neo4j",
                                 "neo4j"))
+        client = Neo4jClient.create(driver)
     }
 
     @Bean
