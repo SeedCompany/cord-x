@@ -12,7 +12,7 @@ class User(
 
         init {
                 val nameProp = StringProp(name)
-                val nameRel = StringPropertyRelationship(true, nameProp)
+                val nameRel = StringPropertyRelationship(nameProp)
                 _name.add(nameRel)
         }
 

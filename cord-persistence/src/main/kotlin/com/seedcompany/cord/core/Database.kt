@@ -15,6 +15,7 @@ import org.springframework.transaction.ReactiveTransactionManager
 import org.springframework.transaction.TransactionManager
 import org.springframework.transaction.annotation.TransactionManagementConfigurer
 import java.io.File
+import java.util.*
 
 @Component
 class Database{
@@ -52,6 +53,11 @@ class Database{
         override fun annotationDrivenTransactionManager(): TransactionManager {
             return reactiveTransactionManager
         }
+    }
+
+    @Bean
+    fun customIdGenerator(): String {
+        return UUID.randomUUID().toString()
     }
 
 }

@@ -1,7 +1,6 @@
 package com.seedcompany.cord.model
 
 import org.springframework.data.neo4j.core.schema.Node
-import java.time.ZonedDateTime
 
 open class PropertyNode () : Entity()
 
