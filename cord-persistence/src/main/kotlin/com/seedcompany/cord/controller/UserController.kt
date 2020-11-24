@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/user")
 class UserController(
-        val userRepo: UserRepository
+        val userReadRepo: UserRepository
 ){
 
     @GetMapping("/create/{name}")
     suspend fun create(@PathVariable("name") name: String): String{
         val user = User(name)
-        userRepo.save(user).awaitFirstOrNull()
+        userReadRepo.save(user).awaitFirstOrNull()
         return "user $name created"
     }
 
     @GetMapping("/get/{id}")
     suspend fun getOne(@PathVariable("id") id: String): String{
-        val user = userRepo.findById(id).awaitFirstOrNull() ?: return "no user with that id"
+        val user = userReadRepo.findById(id).awaitFirstOrNull() ?: return "no user with that id"
         return user.name
     }
 }
