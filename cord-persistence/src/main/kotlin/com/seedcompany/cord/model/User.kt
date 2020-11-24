@@ -7,6 +7,7 @@ import org.springframework.data.neo4j.core.schema.Relationship
 class User(
         var name: String,
 ) : BaseNode() {
+
     @Relationship(type = "name")
     var _name: MutableList<StringPropertyRelationship> = mutableListOf()
 
