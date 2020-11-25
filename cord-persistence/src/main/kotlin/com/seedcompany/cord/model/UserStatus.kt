@@ -1,17 +1,21 @@
 package com.seedcompany.cord.model
 
+import org.neo4j.ogm.annotation.Index
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.RelationshipProperties
 import org.springframework.data.neo4j.core.schema.TargetNode
-import org.neo4j.ogm.annotation.Index
 
-@Node(labels = ["Email", "Property"])
-class EmailProp(
-        @Index(unique = true)
-        var value: String? = null,
+enum class UserStatus {
+    Active,
+    Disabled,
+}
+
+@Node(labels = ["UserStatus", "Property"])
+class UserStatusProp(
+        var value: UserStatus? = null,
 ) : PropertyNode()
 
 @RelationshipProperties
-class EmailPropertyRelationship(
-        @TargetNode var toNode: EmailProp
+class UserStatusPropertyRelationship(
+        @TargetNode var toNode: UserStatusProp
 ) : PropertyRelationship()

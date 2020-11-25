@@ -20,6 +20,14 @@ class UserController(
                 displayFirstName = request.displayFirstName,
                 displayLastName = request.displayLastName,
                 email = request.email,
+                phone = request.phone,
+                realFirstName = request.realFirstName,
+                realLastName = request.realLastName,
+                roles = request.roles,
+                status = request.status,
+                timezone = request.timezone,
+                title = request.title,
+
         )
         userRepo.save(user).awaitFirstOrNull()
         return CreateOut(id = user.id, success = true)
