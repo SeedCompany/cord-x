@@ -5,6 +5,7 @@ import com.seedcompany.cord.repository.UserRepository
 import com.seedcompany.cord.model.User
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.web.bind.annotation.*
+import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/user")
@@ -62,6 +63,8 @@ class UserController(
         if (request.status != null) user.status = request.status
         if (request.timezone != null) user.timezone = request.timezone
         if (request.title != null) user.title = request.title
+
+        user.modifiedAt = ZonedDateTime.now()
 
         userRepo.save(user).awaitFirstOrNull()
 

@@ -4,7 +4,7 @@ import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.RelationshipProperties
 import org.springframework.data.neo4j.core.schema.TargetNode
 
-enum class Role {
+enum class FeRole {
     Administrator,
     BibleTranslationLiaison,
     Consultant,
@@ -33,9 +33,41 @@ enum class Role {
     Writer,
 }
 
+enum class DbRole {
+    AdministratorRole,
+    BibleTranslationLiaisonRole,
+    ConsultantRole,
+    ConsultantManagerRole,
+    ControllerRole,
+    DevelopmentRole,
+    ExecutiveDevelopmentRepresentativeRole,
+    ExecutiveLeadershipRole,
+    FieldOperationsDirectorRole,
+    FieldPartnerRole,
+    FinancialAnalystOnGlobalRole,
+    FinancialAnalystOnProjectRole,
+    FundraisingRole,
+    InternRole,
+    LeadFinancialAnalystRole,
+    LeadershipRole,
+    LiasonRole,
+    MarketingRole,
+    MentorRole,
+    OfficeOfThePresidentRole,
+    ProjectManagerGlobalRole,
+    ProjectManagerOnProjectRole,
+    RegionalCommunicationsCoordinatorRole,
+    RegionalDirectorGlobalRole,
+    RegionalDirectorOnProjectRole,
+    StaffMemberRole,
+    SupportingProjectManagerRole,
+    TranslatorRole,
+    WriterRole,
+}
+
 @Node(labels = ["Role", "Property"])
 class RoleProp(
-        var value: Role? = null,
+        var value: FeRole? = null,
 ) : PropertyNode()
 
 @RelationshipProperties

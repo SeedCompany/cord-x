@@ -14,7 +14,7 @@ class User(
         phone: String?,
         realFirstName: String?,
         realLastName: String?,
-        roles: List<Role> = listOf(),
+        roles: List<FeRole> = listOf(),
         status: UserStatus?,
         timezone: String?,
         title: String?,
@@ -194,6 +194,10 @@ class User(
 
             field = value
         }
+
+    @Relationship(type = "member", direction = Relationship.Direction.INCOMING)
+    @JsonIgnore
+    val security: List<Security> = listOf()
 
     @Relationship(type = "status")
     @JsonIgnore
