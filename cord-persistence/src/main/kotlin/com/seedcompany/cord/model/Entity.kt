@@ -8,5 +8,4 @@ import java.util.*
 open class Entity(
     @Id var id: String = UUID.randomUUID().toString(),
     var createdAt: ZonedDateTime = ZonedDateTime.now(),
-    var deletedAt: ZonedDateTime? = null,
 )
