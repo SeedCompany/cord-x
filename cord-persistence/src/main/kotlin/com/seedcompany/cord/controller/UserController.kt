@@ -27,7 +27,6 @@ class UserController(
                 status = request.status,
                 timezone = request.timezone,
                 title = request.title,
-
         )
         userRepo.save(user).awaitFirstOrNull()
         return CreateOut(id = user.id, success = true)
@@ -47,14 +46,24 @@ class UserController(
     }
 
     @PostMapping("/update")
-    suspend fun update(@RequestBody request: UserUpdateIn): GenericOut {
-
+    suspend fun update(@RequestBody request: User): GenericOut {
 
         val user = userRepo.findById(request.id).awaitFirstOrNull()
                 ?: return UserOut(message = "user not found")
-        user.about = request.name
-        userRepo.save(user).awaitFirstOrNull()
 
+        if (request.about != null) user.about = request.about
+        if (request.displayFirstName != null) user.displayFirstName = request.displayFirstName
+        if (request.displayLastName != null) user.displayLastName = request.displayLastName
+        if (request.email != null) user.email = request.email
+        if (request.phone != null) user.phone = request.phone
+        if (request.realFirstName != null) user.realFirstName = request.realFirstName
+        if (request.realLastName != null) user.realLastName = request.realLastName
+        if (request.roles != null) user.roles = request.roles
+        if (request.status != null) user.status = request.status
+        if (request.timezone != null) user.timezone = request.timezone
+        if (request.title != null) user.title = request.title
+
+        userRepo.save(user).awaitFirstOrNull()
 
         return GenericOut(true)
     }

@@ -3,6 +3,7 @@ package com.seedcompany.cord.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
+import java.time.ZonedDateTime
 
 @Node(labels = ["User", "BaseNode"])
 class User(
@@ -13,7 +14,7 @@ class User(
         phone: String?,
         realFirstName: String?,
         realLastName: String?,
-        roles: Array<Role>?,
+        roles: List<Role> = listOf(),
         status: UserStatus?,
         timezone: String?,
         title: String?,
@@ -164,15 +165,33 @@ class User(
         }
     }
 
-    // TODO: need to refactor to check for intersection or diff
     var roles = roles
         set(value) {
-            if (roles == value) return
-            roles?.forEach {
+
+            if (field.equals(value)) return
+            if (value == null) return
+
+            val added = value.minus(field) // added roles
+            val removed = field.minus(value) // removed roles
+
+            removed.forEach{ role ->
+                _roles.forEach {
+                    if (it.deletedAt == null) {
+                        if (it.toNode.value == role) {
+                            it.toNode.deletedAt = ZonedDateTime.now()
+                            it.deletedAt = ZonedDateTime.now()
+                            _roles.remove(it)
+                        }
+                    }
+                }
+            }
+
+            added.forEach {
                 val prop = RoleProp(it)
                 val rel = RolePropertyRelationship(prop)
                 _roles.add(rel)
             }
+
             field = value
         }
 
