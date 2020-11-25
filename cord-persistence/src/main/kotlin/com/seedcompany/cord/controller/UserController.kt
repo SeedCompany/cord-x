@@ -13,10 +13,16 @@ class UserController(
 ){
 
     @PostMapping("/create")
-    suspend fun create(@RequestBody request: UserCreateIn): GenericOut? {
-        val user = User(request.name)
+    suspend fun create(@RequestBody request: User): CreateOut {
+
+        val user = User(
+                about = request.about,
+                displayFirstName = request.displayFirstName,
+                displayLastName = request.displayLastName,
+                email = request.email,
+        )
         userRepo.save(user).awaitFirstOrNull()
-        return GenericOut(true)
+        return CreateOut(id = user.id, success = true)
     }
 
     @PostMapping("/read")
@@ -26,13 +32,19 @@ class UserController(
         return UserOut(user, true)
     }
 
+    @PostMapping("/createRead")
+    suspend fun createRead(@RequestBody request: User): UserOut? {
+        val id = this.create(request).id
+        return read(UserReadIn(id))
+    }
+
     @PostMapping("/update")
     suspend fun update(@RequestBody request: UserUpdateIn): GenericOut {
 
 
         val user = userRepo.findById(request.id).awaitFirstOrNull()
                 ?: return UserOut(message = "user not found")
-        user.name = request.name
+        user.about = request.name
         userRepo.save(user).awaitFirstOrNull()
 
 

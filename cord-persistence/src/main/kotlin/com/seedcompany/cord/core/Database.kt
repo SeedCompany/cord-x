@@ -55,9 +55,4 @@ class Database{
         }
     }
 
-    @Bean
-    fun customIdGenerator(): String {
-        return UUID.randomUUID().toString()
-    }
-
 }

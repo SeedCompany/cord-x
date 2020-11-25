@@ -6,25 +6,85 @@ import org.springframework.data.neo4j.core.schema.Relationship
 
 @Node
 class User(
-        name: String,
+        about: String?,
+        displayFirstName: String?,
+        displayLastName: String?,
+        email: String?,
 ) : BaseNode() {
 
-    var name = name
+    var about = about
         set(value) {
-            if (name == value) return
-            val nameProp = StringProp(value)
-            val nameRel = StringPropertyRelationship(nameProp)
-            _name.add(nameRel)
+            if (about == value) return
+            val aboutProp = StringProp(value)
+            val aboutRel = StringPropertyRelationship(aboutProp)
+            _about.add(aboutRel)
             field = value
         }
 
-    @Relationship(type = "name")
+    var displayFirstName = displayFirstName
+        set(value) {
+            if (displayFirstName == value) return
+            val prop = StringProp(value)
+            val rel = StringPropertyRelationship(prop)
+            _displayFirstName.add(rel)
+            field = value
+        }
+
+    var displayLastName = displayLastName
+        set(value) {
+            if (displayLastName == value) return
+            val prop = StringProp(value)
+            val rel = StringPropertyRelationship(prop)
+            _displayLastName.add(rel)
+            field = value
+        }
+
+    var email = email
+        set(value) {
+            if (email == value) return
+            val prop = EmailProp(value)
+            val rel = EmailPropertyRelationship(prop)
+            _email.add(rel)
+            field = value
+        }
+
+    @Relationship(type = "about")
     @JsonIgnore
-    var _name: MutableList<StringPropertyRelationship> = mutableListOf()
+    var _about: MutableList<StringPropertyRelationship> = mutableListOf()
 
     init {
-        val nameProp = StringProp(name)
-        val nameRel = StringPropertyRelationship(nameProp)
-        _name.add(nameRel)
+        val aboutProp = StringProp(about)
+        val aboutRel = StringPropertyRelationship(aboutProp)
+        _about.add(aboutRel)
+    }
+
+    @Relationship(type = "displayFirstName")
+    @JsonIgnore
+    var _displayFirstName: MutableList<StringPropertyRelationship> = mutableListOf()
+
+    init {
+        val prop = StringProp(displayFirstName)
+        val rel = StringPropertyRelationship(prop)
+        _displayFirstName.add(rel)
+    }
+
+    @Relationship(type = "displayLastName")
+    @JsonIgnore
+    var _displayLastName: MutableList<StringPropertyRelationship> = mutableListOf()
+
+    init {
+        val prop = StringProp(displayLastName)
+        val rel = StringPropertyRelationship(prop)
+        _displayLastName.add(rel)
+    }
+
+    @Relationship(type = "email")
+    @JsonIgnore
+    var _email: MutableList<EmailPropertyRelationship> = mutableListOf()
+
+    init {
+        val prop = EmailProp(email)
+        val rel = EmailPropertyRelationship(prop)
+        _email.add(rel)
     }
 }
