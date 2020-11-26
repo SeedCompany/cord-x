@@ -26,9 +26,10 @@ class AuthorizationService(
                     ?: return GenericOut(message = "failed to find new user node")
             val adminSg = SecurityGroup(
                     role = DbRole.AdministratorRole,
-                    grants = AdministratorRole().grants,
+                    grants = AdministratorRole().grants(),
             )
-            adminSg.addMember(user)
+            adminSg.members.add(user)
+            adminSg.baseNodes.add(user)
             authorizationRepo.save(adminSg).awaitFirstOrNull()
         }
 

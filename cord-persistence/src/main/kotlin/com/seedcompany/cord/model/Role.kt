@@ -1,8 +1,11 @@
 package com.seedcompany.cord.model
 
 import org.springframework.data.neo4j.core.schema.Node
-import org.springframework.data.neo4j.core.schema.RelationshipProperties
-import org.springframework.data.neo4j.core.schema.TargetNode
+
+interface IRole {
+    fun name(): DbRole
+    fun grants(): Map<PropName, Perm>
+}
 
 enum class FeRole {
     Administrator,

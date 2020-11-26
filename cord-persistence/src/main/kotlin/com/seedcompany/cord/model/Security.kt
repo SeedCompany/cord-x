@@ -25,13 +25,15 @@ open class SecurityGroup(
         @CompositeProperty
         var grants: Map<PropName, Perm>,
 ) : BaseNode() {
+
     @Relationship(type = "member")
     @JsonIgnore
     var members: MutableList<User> = mutableListOf()
 
-    public fun addMember(user: User){
-        members.add(user)
-    }
+    @Relationship(type = "baseNode")
+    @JsonIgnore
+    var baseNodes: MutableList<BaseNode> = mutableListOf()
+
 }
 
 @Node
