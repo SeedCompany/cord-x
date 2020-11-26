@@ -197,7 +197,7 @@ class User(
 
     @Relationship(type = "member", direction = Relationship.Direction.INCOMING)
     @JsonIgnore
-    val security: List<Security> = listOf()
+    var memberships: List<SecurityGroup> = listOf()
 
     @Relationship(type = "status")
     @JsonIgnore

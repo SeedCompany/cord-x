@@ -10,7 +10,7 @@ open class Entity {
     @Id
     @GeneratedValue(UUIDStringGenerator::class)
     lateinit var id: String
-    val createdAt: ZonedDateTime = ZonedDateTime.now()
+    var createdAt: ZonedDateTime = ZonedDateTime.now()
     var modifiedAt: ZonedDateTime = ZonedDateTime.now()
     var deletedAt: ZonedDateTime? = null
 }

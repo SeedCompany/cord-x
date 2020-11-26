@@ -1,6 +1,7 @@
-package com.seedcompany.cord.controller
+package com.seedcompany.cord.service
 
 import com.seedcompany.cord.dto.*
+import com.seedcompany.cord.model.BaseNodeLabel
 import com.seedcompany.cord.repository.UserRepository
 import com.seedcompany.cord.model.User
 import kotlinx.coroutines.reactive.awaitFirstOrNull
@@ -9,8 +10,9 @@ import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/user")
-class UserController(
-        val userRepo: UserRepository
+class UserService(
+        val userRepo: UserRepository,
+        val authorizationService: AuthorizationService,
 ){
 
     @PostMapping("/create")
@@ -29,7 +31,15 @@ class UserController(
                 timezone = request.timezone,
                 title = request.title,
         )
+
         userRepo.save(user).awaitFirstOrNull()
+
+        authorizationService.processBaseNode(ProcessBaseNodeIn(
+                baseNodeId = user.id,
+                label = BaseNodeLabel.User,
+                creatorUserId = user.id,
+        ))
+
         return CreateOut(id = user.id, success = true)
     }
 
