@@ -69,8 +69,3 @@ enum class DbRole {
 class RoleProp(
         var value: FeRole? = null,
 ) : PropertyNode()
-
-@RelationshipProperties
-class RolePropertyRelationship(
-        @TargetNode var toNode: RoleProp
-) : PropertyRelationship()

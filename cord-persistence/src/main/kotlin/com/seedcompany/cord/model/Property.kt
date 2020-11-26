@@ -21,21 +21,3 @@ open class BooleanProp (
 open class NumberProp (
         var value: Long?
 ) : PropertyNode()
-
-@RelationshipProperties
-open class PropertyRelationship() : Entity()
-
-@RelationshipProperties
-open class StringPropertyRelationship(
-        @TargetNode var toNode: StringProp
-) : PropertyRelationship()
-
-@RelationshipProperties
-open class BooleanPropertyRelationship(
-        @TargetNode var toNode: BooleanProp
-) : PropertyRelationship()
-
-@RelationshipProperties
-open class NumberPropertyRelationship(
-        @TargetNode var toNode: NumberProp
-) : PropertyRelationship()

@@ -10,8 +10,3 @@ class EmailProp(
         @Index(unique = true)
         var value: String? = null,
 ) : PropertyNode()
-
-@RelationshipProperties
-class EmailPropertyRelationship(
-        @TargetNode var toNode: EmailProp
-) : PropertyRelationship()

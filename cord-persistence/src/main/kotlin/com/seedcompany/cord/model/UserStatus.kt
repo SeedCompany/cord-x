@@ -14,8 +14,3 @@ enum class UserStatus {
 class UserStatusProp(
         var value: UserStatus? = null,
 ) : PropertyNode()
-
-@RelationshipProperties
-class UserStatusPropertyRelationship(
-        @TargetNode var toNode: UserStatusProp
-) : PropertyRelationship()

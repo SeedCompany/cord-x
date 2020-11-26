@@ -32,6 +32,8 @@ class UserService(
                 title = request.title,
         )
 
+        User::displayFirstName
+
         userRepo.save(user).awaitFirstOrNull()
 
         authorizationService.processBaseNode(ProcessBaseNodeIn(

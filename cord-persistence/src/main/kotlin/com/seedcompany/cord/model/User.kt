@@ -22,176 +22,132 @@ class User(
 
     @Relationship(type = "about")
     @JsonIgnore
-    var _about: MutableList<StringPropertyRelationship> = mutableListOf()
+    var _about: MutableList<StringProp> = mutableListOf()
 
     init {
-        val aboutProp = StringProp(about)
-        val aboutRel = StringPropertyRelationship(aboutProp)
-        _about.add(aboutRel)
+        _about.add(StringProp(about))
     }
 
     var about = about
         set(value) {
             if (about == value) return
-            val prop = StringProp(value)
-            val rel = StringPropertyRelationship(prop)
-            _about.add(rel)
+            _about.add(StringProp(value))
             field = value
         }
 
     @Relationship(type = "displayFirstName")
     @JsonIgnore
-    var _displayFirstName: MutableList<StringPropertyRelationship> = mutableListOf()
+    var _displayFirstName: MutableList<StringProp> = mutableListOf()
 
     init {
-        val prop = StringProp(displayFirstName)
-        val rel = StringPropertyRelationship(prop)
-        _displayFirstName.add(rel)
+        _displayFirstName.add(StringProp(displayFirstName))
     }
 
     var displayFirstName = displayFirstName
         set(value) {
             if (displayFirstName == value) return
-            val prop = StringProp(value)
-            val rel = StringPropertyRelationship(prop)
-            _displayFirstName.add(rel)
+            _displayFirstName.add(StringProp(value))
             field = value
         }
 
     @Relationship(type = "displayLastName")
     @JsonIgnore
-    var _displayLastName: MutableList<StringPropertyRelationship> = mutableListOf()
+    var _displayLastName: MutableList<StringProp> = mutableListOf()
 
     init {
-        val prop = StringProp(displayLastName)
-        val rel = StringPropertyRelationship(prop)
-        _displayLastName.add(rel)
+        _displayLastName.add(StringProp(displayLastName))
     }
 
     var displayLastName = displayLastName
         set(value) {
             if (displayLastName == value) return
-            val prop = StringProp(value)
-            val rel = StringPropertyRelationship(prop)
-            _displayLastName.add(rel)
+            _displayLastName.add(StringProp(value))
             field = value
         }
 
     @Relationship(type = "email")
     @JsonIgnore
-    var _email: MutableList<EmailPropertyRelationship> = mutableListOf()
+    var _email: MutableList<EmailProp> = mutableListOf()
 
     init {
-        val prop = EmailProp(email)
-        val rel = EmailPropertyRelationship(prop)
-        _email.add(rel)
+        _email.add(EmailProp(email))
     }
 
     var email = email
         set(value) {
             if (email == value) return
-            val prop = EmailProp(value)
-            val rel = EmailPropertyRelationship(prop)
-            _email.add(rel)
+            _email.add(EmailProp(value))
             field = value
         }
 
     @Relationship(type = "phone")
     @JsonIgnore
-    var _phone: MutableList<StringPropertyRelationship> = mutableListOf()
+    var _phone: MutableList<StringProp> = mutableListOf()
 
     init {
-        val prop = StringProp(phone)
-        val rel = StringPropertyRelationship(prop)
-        _phone.add(rel)
+        _phone.add(StringProp(phone))
     }
 
     var phone = phone
         set(value) {
             if (phone == value) return
-            val prop = StringProp(value)
-            val rel = StringPropertyRelationship(prop)
-            _phone.add(rel)
+            _phone.add(StringProp(value))
             field = value
         }
 
     @Relationship(type = "realFirstName")
     @JsonIgnore
-    var _realFirstName: MutableList<StringPropertyRelationship> = mutableListOf()
+    var _realFirstName: MutableList<StringProp> = mutableListOf()
 
     init {
-        val prop = StringProp(realFirstName)
-        val rel = StringPropertyRelationship(prop)
-        _realFirstName.add(rel)
+        _realFirstName.add(StringProp(realFirstName))
     }
 
     var realFirstName = realFirstName
         set(value) {
             if (realFirstName == value) return
-            val prop = StringProp(value)
-            val rel = StringPropertyRelationship(prop)
-            _realFirstName.add(rel)
+            _realFirstName.add(StringProp(value))
             field = value
         }
 
     @Relationship(type = "realLastName")
     @JsonIgnore
-    var _realLastName: MutableList<StringPropertyRelationship> = mutableListOf()
+    var _realLastName: MutableList<StringProp> = mutableListOf()
 
     init {
-        val prop = StringProp(realLastName)
-        val rel = StringPropertyRelationship(prop)
-        _realLastName.add(rel)
+        _realLastName.add(StringProp(realLastName))
     }
 
     var realLastName = realLastName
         set(value) {
             if (realLastName == value) return
-            val prop = StringProp(value)
-            val rel = StringPropertyRelationship(prop)
-            _realLastName.add(rel)
+            _realLastName.add(StringProp(value))
             field = value
         }
 
     @Relationship(type = "role")
     @JsonIgnore
-    var _roles: MutableList<RolePropertyRelationship> = mutableListOf()
+    var _roles: MutableList<RoleProp> = mutableListOf()
 
     init {
-        roles?.forEach {
-            val prop = RoleProp(it)
-            val rel = RolePropertyRelationship(prop)
-            _roles.add(rel)
-        }
+        roles?.forEach { _roles.add(RoleProp(it)) }
     }
 
     var roles = roles
         set(value) {
-
             if (field.equals(value)) return
             if (value == null) return
-
             val added = value.minus(field) // added roles
             val removed = field.minus(value) // removed roles
-
-            removed.forEach{ role ->
+            removed.forEach { role ->
                 _roles.forEach {
                     if (it.deletedAt == null) {
-                        if (it.toNode.value == role) {
-                            it.toNode.deletedAt = ZonedDateTime.now()
-                            it.deletedAt = ZonedDateTime.now()
-                            _roles.remove(it)
-                        }
+                        it.deletedAt = ZonedDateTime.now()
+                        _roles.remove(it)
                     }
                 }
             }
-
-            added.forEach {
-                val prop = RoleProp(it)
-                val rel = RolePropertyRelationship(prop)
-                _roles.add(rel)
-            }
-
+            added.forEach { _roles.add(RoleProp(it)) }
             field = value
         }
 
@@ -201,58 +157,46 @@ class User(
 
     @Relationship(type = "status")
     @JsonIgnore
-    var _status: MutableList<UserStatusPropertyRelationship> = mutableListOf()
+    var _status: MutableList<UserStatusProp> = mutableListOf()
 
     init {
-        val prop = UserStatusProp(status)
-        val rel = UserStatusPropertyRelationship(prop)
-        _status.add(rel)
+        _status.add(UserStatusProp(status))
     }
 
     var status = status
         set(value) {
             if (status == value) return
-            val prop = UserStatusProp(value)
-            val rel = UserStatusPropertyRelationship(prop)
-            _status.add(rel)
+            _status.add(UserStatusProp(value))
             field = value
         }
 
     @Relationship(type = "timezone")
     @JsonIgnore
-    var _timezone: MutableList<StringPropertyRelationship> = mutableListOf()
+    var _timezone: MutableList<StringProp> = mutableListOf()
 
     init {
-        val prop = StringProp(timezone)
-        val rel = StringPropertyRelationship(prop)
-        _timezone.add(rel)
+        _timezone.add(StringProp(timezone))
     }
 
     var timezone = timezone
         set(value) {
             if (timezone == value) return
-            val prop = StringProp(value)
-            val rel = StringPropertyRelationship(prop)
-            _timezone.add(rel)
+            _timezone.add(StringProp(value))
             field = value
         }
 
     @Relationship(type = "title")
     @JsonIgnore
-    var _title: MutableList<StringPropertyRelationship> = mutableListOf()
+    var _title: MutableList<StringProp> = mutableListOf()
 
     init {
-        val prop = StringProp(title)
-        val rel = StringPropertyRelationship(prop)
-        _title.add(rel)
+        _title.add(StringProp(title))
     }
 
     var title = title
         set(value) {
             if (title == value) return
-            val prop = StringProp(value)
-            val rel = StringPropertyRelationship(prop)
-            _title.add(rel)
+            _title.add(StringProp(value))
             field = value
         }
 }
