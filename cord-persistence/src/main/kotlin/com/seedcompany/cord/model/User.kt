@@ -1,6 +1,7 @@
 package com.seedcompany.cord.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.neo4j.ogm.annotation.Index
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
 import java.time.ZonedDateTime
@@ -73,6 +74,7 @@ class User(
         _email.add(EmailProp(email))
     }
 
+    @Index
     var email = email
         set(value) {
             if (email == value) return
@@ -130,13 +132,12 @@ class User(
     var _roles: MutableList<RoleProp> = mutableListOf()
 
     init {
-        roles?.forEach { _roles.add(RoleProp(it)) }
+        roles.forEach { _roles.add(RoleProp(it)) }
     }
 
     var roles = roles
         set(value) {
             if (field.equals(value)) return
-            if (value == null) return
             val added = value.minus(field) // added roles
             val removed = field.minus(value) // removed roles
             removed.forEach { role ->
