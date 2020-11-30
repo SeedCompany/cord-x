@@ -21,3 +21,17 @@ open class BooleanProp (
 open class NumberProp (
         var value: Long?
 ) : PropertyNode()
+
+enum class PropName {
+    UserAbout,
+    UserDisplayFirstName,
+    UserDisplayLastName,
+    UserEmail,
+    UserPhone,
+    UserRealFirstName,
+    UserRealLastName,
+    UserRoles,
+    UserStatus,
+    UserTimezone,
+    UserTitle,
+}

@@ -15,7 +15,7 @@ class User(
         phone: String?,
         realFirstName: String?,
         realLastName: String?,
-        roles: List<FeRole> = listOf(),
+        roles: List<Role> = listOf(),
         status: UserStatus?,
         timezone: String?,
         title: String?,

@@ -3,11 +3,16 @@ package com.seedcompany.cord.model
 import org.springframework.data.neo4j.core.schema.Node
 
 interface IRole {
-    fun name(): DbRole
+    fun name(): Role
     fun grants(): Map<PropName, Perm>
 }
 
-enum class FeRole {
+@Node(labels = ["Role", "Property"])
+class RoleProp(
+        var value: Role? = null,
+) : PropertyNode()
+
+enum class Role {
     Administrator,
     BibleTranslationLiaison,
     Consultant,
@@ -36,39 +41,11 @@ enum class FeRole {
     Writer,
 }
 
-enum class DbRole {
-    AdministratorRole,
-    BibleTranslationLiaisonRole,
-    ConsultantRole,
-    ConsultantManagerRole,
-    ControllerRole,
-    DevelopmentRole,
-    ExecutiveDevelopmentRepresentativeRole,
-    ExecutiveLeadershipRole,
-    FieldOperationsDirectorRole,
-    FieldPartnerRole,
-    FinancialAnalystOnGlobalRole,
-    FinancialAnalystOnProjectRole,
-    FundraisingRole,
-    InternRole,
-    LeadFinancialAnalystRole,
-    LeadershipRole,
-    LiasonRole,
-    MarketingRole,
-    MentorRole,
-    OfficeOfThePresidentRole,
-    ProjectManagerGlobalRole,
-    ProjectManagerOnProjectRole,
-    RegionalCommunicationsCoordinatorRole,
-    RegionalDirectorGlobalRole,
-    RegionalDirectorOnProjectRole,
-    StaffMemberRole,
-    SupportingProjectManagerRole,
-    TranslatorRole,
-    WriterRole,
+enum class GlobalRole {
+    Administrator,
 }
 
-@Node(labels = ["Role", "Property"])
-class RoleProp(
-        var value: FeRole? = null,
-) : PropertyNode()
+enum class ProjectRole {
+    Administrator,
+}
+

@@ -1,12 +1,12 @@
 package com.seedcompany.cord.role
 
-import com.seedcompany.cord.model.DbRole
+import com.seedcompany.cord.model.Role
 import com.seedcompany.cord.model.IRole
 import com.seedcompany.cord.model.Perm
 import com.seedcompany.cord.model.PropName
 
 class BibleTranslationLiaisonRole: IRole {
-    override fun name() = DbRole.BibleTranslationLiaisonRole
+    override fun name() = Role.BibleTranslationLiaison
     override fun grants() = mapOf(
             PropName.UserAbout to Perm.READ_WRITE_DELETE,
             PropName.UserDisplayFirstName to Perm.READ_WRITE_DELETE,
