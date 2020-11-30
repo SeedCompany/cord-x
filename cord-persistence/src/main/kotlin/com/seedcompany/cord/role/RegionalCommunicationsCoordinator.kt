@@ -5,8 +5,8 @@ import com.seedcompany.cord.model.IRole
 import com.seedcompany.cord.model.Perm
 import com.seedcompany.cord.model.PropName
 
-class BibleTranslationLiaisonRole: IRole {
-    override fun name() = Role.BibleTranslationLiaison
+object RegionalCommunicationsCoordinator : IRole {
+    override fun name() = Role.RegionalCommunicationsCoordinator
     override fun grants() = mapOf(
             PropName.UserAbout to Perm.READ_WRITE_DELETE,
             PropName.UserDisplayFirstName to Perm.READ_WRITE_DELETE,

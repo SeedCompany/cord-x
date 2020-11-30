@@ -43,9 +43,29 @@ enum class Role {
 
 enum class GlobalRole {
     Administrator,
+    ConsultantManager,
+    Controller,
+    FinancialAnalyst,
+    Fundraising,
+    Leadership,
+    Marketing,
+    Mentor,
+    ProjectManager,
+    RegionalCommunicationsCoordinator,
+    StaffMember,
+    Translator,
 }
 
 enum class ProjectRole {
     Administrator,
+    Consultant,
+    FinancialAnalyst,
+    Intern,
+    Liason,
+    Mentor,
+    ProjectManager,
+    RegionalCommunicationsCoordinator,
+    RegionalDirector,
+    Translator,
 }
 

@@ -1,11 +1,11 @@
 package com.seedcompany.cord.service
 
+import com.seedcompany.cord.common.AllRoles
 import com.seedcompany.cord.dto.BootstrapIn
 import com.seedcompany.cord.dto.GenericOut
 import com.seedcompany.cord.model.*
 import com.seedcompany.cord.repository.AuthorizationRepository
 import com.seedcompany.cord.repository.UserRepository
-import com.seedcompany.cord.role.AdministratorRole
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -43,12 +43,10 @@ class AdminService(
         GlobalRole.values().forEach {
             val sg = authorizationRepo.findByRole(Role.valueOf(it.name)).awaitFirstOrNull() ?: GlobalSecurityGroup(
                     role = Role.valueOf(it.name),
-                    grants = AdministratorRole().grants() // TODO: fix hard-coded role
+                    grants = AllRoles.grants(Role.valueOf(it.name))
             )
             authorizationRepo.save(sg).awaitFirstOrNull()
         }
-
-
 
         return GenericOut(true)
     }
