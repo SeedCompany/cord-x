@@ -46,19 +46,19 @@ class AdminService(
         // root user
         val rootUser = userActiveReadOnlyRepo.findByEmail(request.rootEmail).awaitFirstOrNull()
 
-        if (rootUser == null){
+        if (rootUser == null) {
             val newRootUser = User(
-                    about = "",
-                    displayFirstName = "root",
-                    displayLastName = "root",
+//                    about = "",
+//                    displayFirstName = "root",
+//                    displayLastName = "root",
                     email = request.rootEmail,
-                    phone = "+1 (817) 557-2121",
-                    realFirstName = "root",
+//                    phone = "+1 (817) 557-2121",
+//                    realFirstName = "root",
                     realLastName = "root",
-                    roles = listOf(Role.Administrator),
-                    status = UserStatus.Active,
-                    timezone = TimeZone.getDefault().toString(),
-                    title = "root"
+                    roles = mutableListOf(Role.Administrator),
+//                    status = UserStatus.Active,
+//                    timezone = TimeZone.getDefault().toString(),
+//                    title = "root"
             )
 
             val adminSg = globalSgRepo.findByGlobalRole(Role.Administrator).awaitFirst()

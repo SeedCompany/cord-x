@@ -13,4 +13,9 @@ open class Entity {
     var createdAt: ZonedDateTime = ZonedDateTime.now()
     var modifiedAt: ZonedDateTime = ZonedDateTime.now()
     var deletedAt: ZonedDateTime? = null
+        set(value){
+            if (value == null) return
+            modifiedAt = value
+            field = value
+        }
 }

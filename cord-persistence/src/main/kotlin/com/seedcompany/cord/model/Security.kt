@@ -56,7 +56,7 @@ interface ProjectSecurityGroupActiveReadOnly {
     fun getProject()
 }
 
-@Node(labels = ["ProjectSecurityGroup2", "SecurityGroup"])
+@Node(labels = ["ProjectSecurityGroup", "SecurityGroup"])
 class ProjectSecurityGroup(
         role: Role,
         grants: Map<PropName, Perm>,
