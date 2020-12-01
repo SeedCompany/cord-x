@@ -7,11 +7,6 @@ interface IRole {
     fun grants(): Map<PropName, Perm>
 }
 
-@Node(labels = ["Role", "Property"])
-class RoleProp(
-        var value: Role? = null,
-) : PropertyNode()
-
 enum class Role {
     Administrator,
     Anonymous,

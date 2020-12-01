@@ -1,5 +1,6 @@
 package com.seedcompany.cord.model
 
+import org.neo4j.ogm.annotation.Index
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.RelationshipProperties
 import org.springframework.data.neo4j.core.schema.TargetNode
@@ -20,6 +21,17 @@ open class BooleanProp (
 @Node(labels = ["NumberProp", "Property"])
 open class NumberProp (
         var value: Long?
+) : PropertyNode()
+
+@Node(labels = ["Email", "Property"])
+class EmailProp(
+        @Index(unique = true)
+        var value: String? = null,
+) : PropertyNode()
+
+@Node(labels = ["Role", "Property"])
+class RoleProp(
+        var value: Role? = null,
 ) : PropertyNode()
 
 enum class PropName {

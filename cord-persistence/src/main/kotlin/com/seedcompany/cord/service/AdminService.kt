@@ -52,12 +52,12 @@ class AdminService(
                     displayFirstName = "root",
                     displayLastName = "root",
                     email = request.rootEmail,
-                    phone = "+1 (817) 557-2121",
+                    phone = "+1 (817) 557-2121", // Seed office
                     realFirstName = "root",
                     realLastName = "root",
                     roles = mutableListOf(Role.Administrator),
                     status = UserStatus.Active,
-                    timezone = TimeZone.getDefault().toString(),
+                    timezone = null,
                     title = "root"
             )
 
@@ -65,7 +65,6 @@ class AdminService(
             adminSg.members.add(newRootUser)
             globalSgRepo.save(adminSg).awaitFirstOrNull()
         }
-
 
         return GenericOut(true)
     }
