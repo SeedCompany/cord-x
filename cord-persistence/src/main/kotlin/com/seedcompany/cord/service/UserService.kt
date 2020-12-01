@@ -32,8 +32,6 @@ class UserService(
                 title = request.title,
         )
 
-        User::displayFirstName
-
         userRepo.save(user).awaitFirstOrNull()
 
         authorizationService.processBaseNode(ProcessBaseNodeIn(
@@ -71,7 +69,7 @@ class UserService(
         if (request.phone != null) user.phone = request.phone
         if (request.realFirstName != null) user.realFirstName = request.realFirstName
         if (request.realLastName != null) user.realLastName = request.realLastName
-        if (request.roles != null) user.roles = request.roles
+        if (request.roles.isNotEmpty()) user.roles = request.roles
         if (request.status != null) user.status = request.status
         if (request.timezone != null) user.timezone = request.timezone
         if (request.title != null) user.title = request.title

@@ -8,7 +8,9 @@ import com.seedcompany.cord.repository.GlobalSecurityGroupActiveReadOnlyReposito
 import com.seedcompany.cord.repository.GlobalSecurityGroupRepository
 import com.seedcompany.cord.repository.UserActiveReadOnlyRepository
 import com.seedcompany.cord.repository.UserRepository
+import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.apache.commons.collections4.ListUtils
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -27,6 +29,20 @@ class AdminService(
     @PostMapping("/bootstrap")
     suspend fun bootstrap(@RequestBody request: BootstrapIn): GenericOut {
 
+        // global SGs/roles
+        GlobalRole.values().forEach {
+            val sg = globalSgActiveReadOnlyRepo.findByGlobalRole(Role.valueOf(it.name)).awaitFirstOrNull()
+
+            if (sg == null) {
+                val newSg = GlobalSecurityGroup(
+                        role = Role.valueOf(it.name),
+                        grants = AllRoles.grants(Role.valueOf(it.name)),
+                        members = mutableListOf()
+                )
+                globalSgRepo.save(newSg).awaitFirstOrNull()
+            }
+        }
+
         // root user
         val rootUser = userActiveReadOnlyRepo.findByEmail(request.rootEmail).awaitFirstOrNull()
 
@@ -44,21 +60,12 @@ class AdminService(
                     timezone = TimeZone.getDefault().toString(),
                     title = "root"
             )
-            userRepo.save(newRootUser).awaitFirstOrNull()
+
+            val adminSg = globalSgRepo.findByGlobalRole(Role.Administrator).awaitFirst()
+            adminSg.members.add(newRootUser)
+            globalSgRepo.save(adminSg).awaitFirstOrNull()
         }
 
-        // global SGs/roles
-        GlobalRole.values().forEach {
-            val sg = globalSgActiveReadOnlyRepo.findByGlobalRole(Role.valueOf(it.name)).awaitFirstOrNull()
-
-            if (sg == null) {
-                val newSg = GlobalSecurityGroup(
-                        role = Role.valueOf(it.name),
-                        grants = AllRoles.grants(Role.valueOf(it.name))
-                )
-                globalSgRepo.save(newSg).awaitFirstOrNull()
-            }
-        }
 
         return GenericOut(true)
     }

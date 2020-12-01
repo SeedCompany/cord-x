@@ -33,6 +33,12 @@ class User(
         status: UserStatus?,
         timezone: String?,
         title: String?,
+        @Relationship(type = "member", direction = Relationship.Direction.INCOMING)
+        @JsonIgnore
+        var membershipsGlobal: List<GlobalSecurityGroup> = listOf(),
+        @Relationship(type = "member", direction = Relationship.Direction.INCOMING)
+        @JsonIgnore
+        var membershipsProject: List<ProjectSecurityGroup> = listOf(),
 ) : BaseNode() {
 
     @Relationship(type = "about")
@@ -95,6 +101,7 @@ class User(
             _email.add(EmailProp(value))
             field = value
         }
+
 
     @Relationship(type = "phone")
     @JsonIgnore
@@ -165,10 +172,6 @@ class User(
             added.forEach { _roles.add(RoleProp(it)) }
             field = value
         }
-
-    @Relationship(type = "member", direction = Relationship.Direction.INCOMING)
-    @JsonIgnore
-    var memberships: List<SecurityGroup> = listOf()
 
     @Relationship(type = "status")
     @JsonIgnore
