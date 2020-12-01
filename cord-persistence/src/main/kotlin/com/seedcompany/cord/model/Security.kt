@@ -6,7 +6,6 @@ import org.springframework.data.neo4j.core.schema.CompositeProperty
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
 
-@Node
 open class SecurityGroup(
         open var role: Role,
         @CompositeProperty
@@ -17,7 +16,7 @@ open class SecurityGroup(
     var members: MutableList<User> = mutableListOf()
 }
 
-@Node
+@Node(labels = ["GlobalSecurityGroup", "SecurityGroup"])
 class GlobalSecurityGroup(
         role: Role,
         grants: Map<PropName, Perm>,
@@ -28,19 +27,19 @@ class GlobalSecurityGroup(
         var globalRole: Role = role
 }
 
-@Node
+@Node(labels = ["PublicSecurityGroup", "SecurityGroup"])
 class PublicSecurityGroup(
         role: Role,
         grants: Map<PropName, Perm>,
 ) : SecurityGroup(role, grants)
 
-@Node
+@Node(labels = ["OrgSecurityGroup", "SecurityGroup"])
 class OrgSecurityGroup(
         role: Role,
         grants: Map<PropName, Perm>,
 ) : SecurityGroup(role, grants)
 
-@Node
+@Node(labels = ["ProjectSecurityGroup", "SecurityGroup"])
 class ProjectSecurityGroup(
         role: Role,
         grants: Map<PropName, Perm>,

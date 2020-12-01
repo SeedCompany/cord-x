@@ -1,5 +1,6 @@
 package com.seedcompany.cord.repository
 
+import com.seedcompany.cord.model.GlobalSecurityGroup
 import com.seedcompany.cord.model.Role
 import com.seedcompany.cord.model.SecurityGroup
 import com.seedcompany.cord.model.User
@@ -10,4 +11,5 @@ import reactor.core.publisher.Mono
 @Repository
 interface AuthorizationRepository : ReactiveNeo4jRepository<SecurityGroup, String> {
     fun findByRole(role: Role): Mono<SecurityGroup>
+    fun findByGlobalRole(role: Role): Mono<GlobalSecurityGroup>
 }

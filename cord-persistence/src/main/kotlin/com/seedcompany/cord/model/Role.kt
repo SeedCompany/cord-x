@@ -41,6 +41,7 @@ enum class Role {
     Writer,
 }
 
+// must be a subset of Role
 enum class GlobalRole {
     Administrator,
     ConsultantManager,
@@ -56,6 +57,7 @@ enum class GlobalRole {
     Translator,
 }
 
+// must be a subset of Role
 enum class ProjectRole {
     Administrator,
     Consultant,

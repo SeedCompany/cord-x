@@ -6,6 +6,10 @@ import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
 import java.time.ZonedDateTime
 
+interface UserActive {
+    fun getEmail()
+}
+
 @Node(labels = ["User", "BaseNode"])
 class User(
         about: String?,
