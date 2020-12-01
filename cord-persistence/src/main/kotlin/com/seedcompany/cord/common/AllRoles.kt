@@ -9,10 +9,12 @@ object AllRoles {
     fun grants(role: Role): Map<PropName, Perm>{
         when (role) {
             Role.Administrator -> return Administrator.grants()
+            Role.Anonymous -> return Anonymous.grants()
             Role.BibleTranslationLiaison -> return BibleTranslationLiaison.grants()
             Role.Consultant -> return Consultant.grants()
             Role.ConsultantManager -> return ConsultantManager.grants()
             Role.Controller -> return Controller.grants()
+            Role.CordUser -> return CordUser.grants()
             Role.Development -> return Development.grants()
             Role.ExecutiveDevelopmentRepresentative -> return ExecutiveDevelopmentRepresentative.grants()
             Role.ExecutiveLeadership -> return ExecutiveLeadership.grants()

@@ -14,10 +14,12 @@ class RoleProp(
 
 enum class Role {
     Administrator,
+    Anonymous,
     BibleTranslationLiaison,
     Consultant,
     ConsultantManager,
     Controller,
+    CordUser,
     Development,
     ExecutiveDevelopmentRepresentative,
     ExecutiveLeadership,
@@ -44,8 +46,10 @@ enum class Role {
 // must be a subset of Role
 enum class GlobalRole {
     Administrator,
+    Anonymous,
     ConsultantManager,
     Controller,
+    CordUser,
     FinancialAnalyst,
     Fundraising,
     Leadership,
