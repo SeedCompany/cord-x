@@ -1,7 +1,7 @@
 package com.seedcompany.cord.repository
 
 import com.seedcompany.cord.model.User
-import com.seedcompany.cord.model.UserActive
+import com.seedcompany.cord.model.UserActiveReadOnly
 import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Mono
@@ -12,6 +12,6 @@ interface UserRepository : ReactiveNeo4jRepository<User, String> {
 }
 
 @Repository
-interface UserActiveRepository : ReactiveNeo4jRepository<User, String> {
-    fun findByEmail(email: String): Mono<UserActive>
+interface UserActiveReadOnlyRepository : ReactiveNeo4jRepository<User, String> {
+    fun findByEmail(email: String): Mono<UserActiveReadOnly>
 }

@@ -6,8 +6,18 @@ import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
 import java.time.ZonedDateTime
 
-interface UserActive {
+interface UserActiveReadOnly {
+    fun getAbout()
+    fun getDisplayFirstName()
+    fun getDisplayLastName()
     fun getEmail()
+    fun getPhone()
+    fun getRealFirstName()
+    fun getRealLastName()
+    fun getRoles()
+    fun getStatus()
+    fun getTimezone()
+    fun getTitle()
 }
 
 @Node(labels = ["User", "BaseNode"])
@@ -144,7 +154,7 @@ class User(
             if (field.equals(value)) return
             val added = value.minus(field) // added roles
             val removed = field.minus(value) // removed roles
-            removed.forEach { role ->
+            removed.forEach { _ ->
                 _roles.forEach {
                     if (it.deletedAt == null) {
                         it.deletedAt = ZonedDateTime.now()

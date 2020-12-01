@@ -16,6 +16,12 @@ open class SecurityGroup(
     var members: MutableList<User> = mutableListOf()
 }
 
+interface GlobalSecurityGroupActiveReadOnly{
+    fun getRole()
+    fun getGrants()
+    fun getGlobalRole()
+}
+
 @Node(labels = ["GlobalSecurityGroup", "SecurityGroup"])
 class GlobalSecurityGroup(
         role: Role,
@@ -39,9 +45,19 @@ class OrgSecurityGroup(
         grants: Map<PropName, Perm>,
 ) : SecurityGroup(role, grants)
 
-@Node(labels = ["ProjectSecurityGroup", "SecurityGroup"])
+interface ProjectSecurityGroupActiveReadOnly {
+    fun getRole()
+    fun getGrants()
+    fun getProject()
+}
+
+@Node(labels = ["ProjectSecurityGroup2", "SecurityGroup"])
 class ProjectSecurityGroup(
         role: Role,
         grants: Map<PropName, Perm>,
-        var project: StringProp, // TODO: change to project node
-) : SecurityGroup(role, grants)
+        var project: String?,
+) : SecurityGroup(role, grants) {
+    @Relationship(type = "project")
+    @JsonIgnore
+    var _project: StringProp? = null// TODO: update when project model is created
+}
