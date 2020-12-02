@@ -36,17 +36,17 @@ class UserService(
 
         userRepo.save(user).awaitFirstOrNull()
 
-        authorizationService.processBaseNode(ProcessBaseNodeIn(
-                baseNodeId = user.id,
-                label = BaseNodeLabel.User,
-                creatorUserId = user.id,
-        ))
+//        authorizationService.processBaseNode(ProcessBaseNodeIn(
+//                baseNodeId = user.id,
+//                label = BaseNodeLabel.User,
+//                creatorUserId = user.id,
+//        ))
 
         return CreateOut(id = user.id, success = true)
     }
 
     @PostMapping("/read")
-    suspend fun read(@RequestBody request: UserReadIn): UserOut {
+    suspend fun read(@RequestBody request: ReadIn): UserOut {
         val user = userActiveReadOnlyRepo.findById(request.id).awaitFirstOrNull()
                 ?: return UserOut(message = "user not found")
         return UserOut(user, true)
@@ -55,14 +55,14 @@ class UserService(
     @PostMapping("/createRead")
     suspend fun createRead(@RequestBody request: User): UserOut? {
         val id = this.create(request).id
-        return read(UserReadIn(id))
+        return read(ReadIn(id))
     }
 
     @PostMapping("/update")
     suspend fun update(@RequestBody request: User): GenericOut {
 
         val user = userRepo.findById(request.id).awaitFirstOrNull()
-                ?: return UserOut(message = "user not found")
+                ?: return GenericOut(message = "user not found")
 
         if (request.about != null) user.about = request.about
         if (request.displayFirstName != null) user.displayFirstName = request.displayFirstName

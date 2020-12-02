@@ -1,9 +1,9 @@
 package com.seedcompany.cord.dto
 
-import com.seedcompany.cord.model.User
+import com.seedcompany.cord.model.Organization
 
-data class UserOut(
-        val user: User? = null,
+data class OrgOut(
+        val org: Organization? = null,
         override val success: Boolean = false,
         override val error: ErrorCode = ErrorCode.NO_ERROR,
         override val message: String? = null,
@@ -11,13 +11,4 @@ data class UserOut(
         success = success,
         error = error,
         message = message,
-)
-
-data class UserCreateIn(val name: String)
-
-data class UserReadIn(val id: String)
-
-data class UserUpdateIn(
-        val id: String,
-        val name: String,
 )

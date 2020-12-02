@@ -10,15 +10,37 @@ open class BaseNode: Entity() {
             field: T?,
             propH: MutableList<PropertyNode>,
             value: T,
-            myFn: (T) -> PropertyNode,
+            propNodeFn: (T) -> PropertyNode,
+            isUnique: Boolean = false,
     ): T? {
         if (field == value) return null
         propH.forEach f@{
             if (it.deletedAt != null) return@f
             val now = ZonedDateTime.now()
             it.deletedAt = now
+            // if (isUnique)
         }
-        propH.add(myFn(value))
+        propH.add(propNodeFn(value))
+        return value
+    }
+
+    fun <T> updateMember2(
+            field: T?,
+            propH: MutableList<TProp<T>>,
+            value: T,
+            labels: Collection<String>,
+            isUnique: Boolean = false,
+    ): T? {
+        if (field == value) return null
+        propH.forEach f@{
+            if (it.deletedAt != null) return@f
+            val now = ZonedDateTime.now()
+            it.deletedAt = now
+             if (isUnique) {
+
+             }
+        }
+        propH.add(TProp<T>(labels, value))
         return value
     }
 

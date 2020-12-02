@@ -4,10 +4,7 @@ import com.seedcompany.cord.common.AllRoles
 import com.seedcompany.cord.dto.BootstrapIn
 import com.seedcompany.cord.dto.GenericOut
 import com.seedcompany.cord.model.*
-import com.seedcompany.cord.repository.GlobalSecurityGroupActiveReadOnlyRepository
-import com.seedcompany.cord.repository.GlobalSecurityGroupRepository
-import com.seedcompany.cord.repository.UserActiveReadOnlyRepository
-import com.seedcompany.cord.repository.UserRepository
+import com.seedcompany.cord.repository.*
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.apache.commons.collections4.ListUtils
@@ -20,6 +17,8 @@ import java.util.*
 @RestController
 @RequestMapping("/admin")
 class AdminService(
+        val orgRepo: OrganizationRepository,
+        val orgActiveReadOnlyRepo: OrganizationActiveReadOnlyRepository,
         val userRepo: UserRepository,
         val userActiveReadOnlyRepo: UserActiveReadOnlyRepository,
         val globalSgRepo: GlobalSecurityGroupRepository,
@@ -41,6 +40,17 @@ class AdminService(
                 )
                 globalSgRepo.save(newSg).awaitFirstOrNull()
             }
+        }
+        
+        // default org
+        val org = orgRepo.findByName(request.defaultOrgName).awaitFirstOrNull()
+
+        if (org == null) {
+            val newOrg = Organization(
+                    address = "",
+                    name = request.defaultOrgName,
+            )
+            orgRepo.save(newOrg).awaitFirstOrNull()
         }
 
         // root user

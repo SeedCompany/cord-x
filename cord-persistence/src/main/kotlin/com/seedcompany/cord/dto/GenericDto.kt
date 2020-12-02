@@ -13,3 +13,5 @@ open class CreateOut (
         error: ErrorCode = ErrorCode.NO_ERROR,
         message: String? = null,
 ) : GenericOut(success, error, message)
+
+open class ReadIn(val id: String)
