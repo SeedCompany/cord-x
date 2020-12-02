@@ -31,6 +31,7 @@ dependencies {
 	}
 	implementation("org.neo4j.procedure:apoc:4.1.0.4")
 	implementation("org.neo4j:neo4j-ogm-core:3.2.18")
+	implementation("org.neo4j:neo4j-ogm-bolt-driver:3.2.18")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 }

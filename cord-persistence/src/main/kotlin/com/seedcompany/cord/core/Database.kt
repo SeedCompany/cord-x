@@ -4,12 +4,13 @@ import org.neo4j.common.DependencyResolver
 import org.neo4j.configuration.connectors.BoltConnector
 import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder
-import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.Driver
 import org.neo4j.driver.GraphDatabase
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.kernel.api.procedure.GlobalProcedures
 import org.neo4j.kernel.internal.GraphDatabaseAPI
+import org.neo4j.ogm.config.Configuration
+import org.neo4j.ogm.session.SessionFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.data.neo4j.core.Neo4jClient
 import org.springframework.data.neo4j.core.transaction.ReactiveNeo4jTransactionManager
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 import java.io.File
 
 @Component
-class Database{
+class Database {
     final val managementService = DatabaseManagementServiceBuilder(File("database"))
             .setConfig(BoltConnector.enabled, true)
             .setConfig(
@@ -38,16 +39,14 @@ class Database{
         val proceduresService: GlobalProcedures = (db as GraphDatabaseAPI).dependencyResolver.resolveDependency(GlobalProcedures::class.java, DependencyResolver.SelectionStrategy.FIRST)
 
         proceduresService.registerProcedure(apoc.periodic.Periodic::class.java)
+        proceduresService.registerProcedure(apoc.schema.Schemas::class.java)
         proceduresService.registerProcedure(apoc.warmup.Warmup::class.java)
 
         Runtime.getRuntime().addShutdownHook(Thread(managementService::shutdown))
-        driver =
-                GraphDatabase.driver(
-                        "bolt://localhost:7687",
-                        AuthTokens.basic(
-                                "neo4j",
-                                "neo4j"))
+
+        driver = GraphDatabase.driver("bolt://neo4j:neo4j@localhost:7687")
         client = Neo4jClient.create(driver)
+
     }
 
     @Bean
@@ -64,4 +63,12 @@ class Database{
         }
     }
 
+    @Bean
+    fun sessionFactory(): SessionFactory? {
+        val config = Configuration.Builder()
+                .uri("bolt://neo4j:neo4j@localhost:7687")
+                .autoIndex("update")
+                .build()
+        return SessionFactory(config, "com.seedcompany.cord.model")
+    }
 }
