@@ -15,8 +15,10 @@ interface OrganizationRepository : ReactiveNeo4jRepository<Organization, String>
     fun findByName(name: String): Mono<Organization>
 
     @Query("""
-        MATCH (n:BaseNode {id: {id}) 
-        SET n:DeletedOrganization, n.deletedAt = LocalDateTime()
+        MATCH (n:Organization {id: ${'$'}id }) 
+        SET n:DeletedOrganization, 
+            n.deletedAt = LocalDateTime(), 
+            n.modifiedAt = LocalDateTime()
         REMOVE n:Organization
     """)
     override fun deleteById(@Param("id") id: String): Mono<Void>

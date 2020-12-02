@@ -3,6 +3,7 @@ package com.seedcompany.cord.service
 import com.seedcompany.cord.common.AllRoles
 import com.seedcompany.cord.dto.BootstrapIn
 import com.seedcompany.cord.dto.GenericOut
+import com.seedcompany.cord.dto.ReplaceIdIn
 import com.seedcompany.cord.model.*
 import com.seedcompany.cord.repository.*
 import kotlinx.coroutines.reactive.awaitFirst
@@ -17,6 +18,7 @@ import java.util.*
 @RestController
 @RequestMapping("/admin")
 class AdminService(
+        val baseRepo: BaseNodeRepository,
         val orgRepo: OrganizationRepository,
         val orgActiveReadOnlyRepo: OrganizationActiveReadOnlyRepository,
         val userRepo: UserRepository,
@@ -24,6 +26,15 @@ class AdminService(
         val globalSgRepo: GlobalSecurityGroupRepository,
         val globalSgActiveReadOnlyRepo: GlobalSecurityGroupActiveReadOnlyRepository,
 ) {
+    @PostMapping("/replaceId")
+    suspend fun replaceId(@RequestBody request: ReplaceIdIn): GenericOut {
+        val node = baseRepo.replaceId(oldId = request.oldId, newId = request.newId).awaitFirstOrNull()
+        return if (node == null){
+            GenericOut(message = "something went wrong")
+        } else {
+            GenericOut(true)
+        }
+    }
 
     @PostMapping("/bootstrap")
     suspend fun bootstrap(@RequestBody request: BootstrapIn): GenericOut {
@@ -50,6 +61,7 @@ class AdminService(
                     address = "",
                     name = request.defaultOrgName,
             )
+            newOrg.id = request.defaultOrgId
             orgRepo.save(newOrg).awaitFirstOrNull()
         }
 

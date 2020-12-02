@@ -8,9 +8,13 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Mono
 
-//@Repository
-//interface BaseNodeRepository<T> : ReactiveNeo4jRepository<T, String> {
+@Repository
+interface BaseNodeRepository : ReactiveNeo4jRepository<BaseNode, String> {
 
-//    @Query("MATCH (n:BaseNode {id: {id}) SET n.deletedId = {id}, n.id = NULL")
-//    override fun deleteById(@Param("id") id: String): Mono<Void>
-//}
+    @Query("MATCH (n:BaseNode {id: \$id }) SET n.deletedId = \$id, n.id = NULL")
+    override fun deleteById(@Param("id") id: String): Mono<Void>
+
+    @Query("MATCH (n:BaseNode {id: \$oldId }) SET n.id = \$newId RETURN n")
+    fun replaceId(@Param("oldId") oldId: String, @Param("newId") newId: String): Mono<BaseNode>
+
+}
