@@ -5,6 +5,7 @@ import com.seedcompany.cord.model.Organization
 import com.seedcompany.cord.repository.OrganizationActiveReadOnlyRepository
 import com.seedcompany.cord.repository.OrganizationRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.neo4j.internal.kernel.api.exceptions.schema.ConstraintValidationException
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,13 +20,20 @@ class OrganizationService (
 ){
     @PostMapping("/create")
     suspend fun create(@RequestBody request: Organization): CreateOut {
-        val org = Organization(
-                address = request.address,
-                name = request.name,
-        )
-        orgRepo.save(org).awaitFirstOrNull()
+        try {
+            val org = Organization(
+                    address = request.address,
+                    name = request.name,
+            )
+            orgRepo.save(org).awaitFirstOrNull()
 
-        return CreateOut(id = org.id, success = true)
+            return CreateOut(id = org.id, success = true)
+
+        } catch (e: Exception) { // TODO: Use real exception
+            if (e.message?.contains("ConstraintValidation") == true )
+                return CreateOut(message = "duplicate name")
+        }
+        return CreateOut(message = "something went wrong")
     }
 
     @PostMapping("/read")

@@ -8,7 +8,7 @@ open class GenericOut (
 )
 
 open class CreateOut (
-        val id: String,
+        val id: String? = null,
         success: Boolean = false,
         error: ErrorCode = ErrorCode.NO_ERROR,
         message: String? = null,

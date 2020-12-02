@@ -7,6 +7,9 @@ import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.RelationshipProperties
 import org.springframework.data.neo4j.core.schema.TargetNode
 
+// TODO: figure out how to use generics with the mapper
+// naive impl results in a primary label error
+
 class AnyProp (
         var value: Any? = null,
         var deletedValue: Any? = null,

@@ -19,30 +19,36 @@ class UserService(
 
     @PostMapping("/create")
     suspend fun create(@RequestBody request: User): CreateOut {
+        try {
+            val user = User(
+                    about = request.about,
+                    displayFirstName = request.displayFirstName,
+                    displayLastName = request.displayLastName,
+                    email = request.email,
+                    phone = request.phone,
+                    realFirstName = request.realFirstName,
+                    realLastName = request.realLastName,
+                    roles = request.roles,
+                    status = request.status,
+                    timezone = request.timezone,
+                    title = request.title,
+            )
 
-        val user = User(
-                about = request.about,
-                displayFirstName = request.displayFirstName,
-                displayLastName = request.displayLastName,
-                email = request.email,
-                phone = request.phone,
-                realFirstName = request.realFirstName,
-                realLastName = request.realLastName,
-                roles = request.roles,
-                status = request.status,
-                timezone = request.timezone,
-                title = request.title,
-        )
+            userRepo.save(user).awaitFirstOrNull()
 
-        userRepo.save(user).awaitFirstOrNull()
+    //        authorizationService.processBaseNode(ProcessBaseNodeIn(
+    //                baseNodeId = user.id,
+    //                label = BaseNodeLabel.User,
+    //                creatorUserId = user.id,
+    //        ))
 
-//        authorizationService.processBaseNode(ProcessBaseNodeIn(
-//                baseNodeId = user.id,
-//                label = BaseNodeLabel.User,
-//                creatorUserId = user.id,
-//        ))
+            return CreateOut(id = user.id, success = true)
 
-        return CreateOut(id = user.id, success = true)
+        } catch (e: Exception) { // TODO: Use real exception
+            if (e.message?.contains("ConstraintValidation") == true )
+                return CreateOut(message = "duplicate email")
+        }
+        return CreateOut(message = "something went wrong")
     }
 
     @PostMapping("/read")
@@ -54,7 +60,7 @@ class UserService(
 
     @PostMapping("/createRead")
     suspend fun createRead(@RequestBody request: User): UserOut? {
-        val id = this.create(request).id
+        val id = this.create(request).id ?: return UserOut(message = "something went wrong")
         return read(ReadIn(id))
     }
 
