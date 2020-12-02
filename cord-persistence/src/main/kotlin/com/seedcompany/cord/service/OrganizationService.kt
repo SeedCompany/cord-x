@@ -39,7 +39,7 @@ class OrganizationService (
     @PostMapping("/read")
     suspend fun read(@RequestBody request: ReadIn): OrgOut {
         val org = orgActiveReadOnlyRepo.findById(request.id).awaitFirstOrNull()
-                ?: return OrgOut(message = "org not found")
+                ?: return OrgOut(message = "org not found", error = ErrorCode.ID_NOT_FOUND)
         return OrgOut(org, true)
     }
 
@@ -47,7 +47,7 @@ class OrganizationService (
     suspend fun update(@RequestBody request: Organization): GenericOut {
 
         val org = orgRepo.findById(request.id).awaitFirstOrNull()
-                ?: return GenericOut(message = "org not found")
+                ?: return GenericOut(message = "org not found", error = ErrorCode.ID_NOT_FOUND)
 
         if (request.address != null) org.address = request.address
         if (request.name != null) org.name = request.name
@@ -63,16 +63,18 @@ class OrganizationService (
     suspend fun delete(@RequestBody request: ReadIn): GenericOut {
 
         val org = orgRepo.findById(request.id).awaitFirstOrNull()
-                ?: return GenericOut(message = "org not found")
+                ?: return GenericOut(message = "org not found", error = ErrorCode.ID_NOT_FOUND)
 
         // delete the name first, since it is unique it must be set to null
         org.name = null
         orgRepo.save(org).awaitFirstOrNull()
 
-        val noop = orgRepo.deleteById(request.id).awaitFirstOrNull()
-                ?: return GenericOut(message = "org not found")
+        orgRepo.deleteById(request.id).awaitFirstOrNull()
 
-        return GenericOut(true)
+        val check = orgRepo.findById(request.id).awaitFirstOrNull()
+                ?: return GenericOut(message = "org not found", error = ErrorCode.ID_NOT_FOUND)
+
+        return GenericOut(message = "something went wrong", error = ErrorCode.UNKNOWN_ERROR)
     }
 
 }

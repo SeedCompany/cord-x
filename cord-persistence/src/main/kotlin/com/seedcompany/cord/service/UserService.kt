@@ -1,7 +1,6 @@
 package com.seedcompany.cord.service
 
 import com.seedcompany.cord.dto.*
-import com.seedcompany.cord.model.BaseNodeLabel
 import com.seedcompany.cord.repository.UserRepository
 import com.seedcompany.cord.model.User
 import com.seedcompany.cord.repository.UserActiveReadOnlyRepository
@@ -46,7 +45,7 @@ class UserService(
 
         } catch (e: Exception) { // TODO: Use real exception
             if (e.message?.contains("ConstraintValidation") == true )
-                return CreateOut(message = "duplicate email")
+                return CreateOut(message = "duplicate email", error = ErrorCode.UNIQUENESS_VIOLATION)
         }
         return CreateOut(message = "something went wrong")
     }
@@ -54,13 +53,13 @@ class UserService(
     @PostMapping("/read")
     suspend fun read(@RequestBody request: ReadIn): UserOut {
         val user = userActiveReadOnlyRepo.findById(request.id).awaitFirstOrNull()
-                ?: return UserOut(message = "user not found")
+                ?: return UserOut(message = "user not found", error = ErrorCode.ID_NOT_FOUND)
         return UserOut(user, true)
     }
 
     @PostMapping("/createRead")
     suspend fun createRead(@RequestBody request: User): UserOut? {
-        val id = this.create(request).id ?: return UserOut(message = "something went wrong")
+        val id = this.create(request).id ?: return UserOut(message = "something went wrong", error = ErrorCode.UNKNOWN_ERROR)
         return read(ReadIn(id))
     }
 
@@ -68,7 +67,7 @@ class UserService(
     suspend fun update(@RequestBody request: User): GenericOut {
 
         val user = userRepo.findById(request.id).awaitFirstOrNull()
-                ?: return GenericOut(message = "user not found")
+                ?: return GenericOut(message = "user not found", error = ErrorCode.ID_NOT_FOUND)
 
         if (request.about != null) user.about = request.about
         if (request.displayFirstName != null) user.displayFirstName = request.displayFirstName
@@ -87,5 +86,23 @@ class UserService(
         userRepo.save(user).awaitFirstOrNull()
 
         return GenericOut(true)
+    }
+
+    @PostMapping("/delete")
+    suspend fun delete(@RequestBody request: ReadIn): GenericOut {
+
+        val user = userRepo.findById(request.id).awaitFirstOrNull()
+                ?: return GenericOut(message = "user not found", error = ErrorCode.ID_NOT_FOUND)
+
+        // delete the name first, since it is unique it must be set to null
+        user.email = null
+        userRepo.save(user).awaitFirstOrNull()
+
+        userRepo.deleteById(request.id).awaitFirstOrNull()
+
+        userRepo.findById(request.id).awaitFirstOrNull()
+            ?: return GenericOut(true)
+
+        return GenericOut(message = "something went wrong", error = ErrorCode.UNKNOWN_ERROR)
     }
 }
