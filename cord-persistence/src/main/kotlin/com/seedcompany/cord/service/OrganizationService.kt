@@ -62,7 +62,14 @@ class OrganizationService (
     @PostMapping("/delete")
     suspend fun delete(@RequestBody request: ReadIn): GenericOut {
 
-        val org = orgRepo.deleteById(request.id).awaitFirstOrNull()
+        val org = orgRepo.findById(request.id).awaitFirstOrNull()
+                ?: return GenericOut(message = "org not found")
+
+        // delete the name first, since it is unique it must be set to null
+        org.name = null
+        orgRepo.save(org).awaitFirstOrNull()
+
+        val noop = orgRepo.deleteById(request.id).awaitFirstOrNull()
                 ?: return GenericOut(message = "org not found")
 
         return GenericOut(true)

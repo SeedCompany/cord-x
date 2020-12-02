@@ -28,9 +28,9 @@ class Organization(
 
     var address = address
         set(value) {
-            field = updateMember(
+            field = updateStringMember(
                     field = address,
-                    propH = addressH as MutableList<AnyProp>,
+                    propH = addressH,
                     value = value,
                     labels = listOf(PropLabel.Property.name)
             ) ?: field
@@ -50,12 +50,11 @@ class Organization(
     @Index(unique = true)
     var name = name
         set(value) {
-            field = updateMember(
+            field = updateOrgNameMember(
                     field = name,
-                    propH = nameH as MutableList<AnyProp>,
+                    propH = nameH,
                     value = value,
                     labels = listOf(PropLabel.OrgName.name, PropLabel.Property.name),
-                    isUnique = true,
             ) ?: field
         }
 }

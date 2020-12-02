@@ -10,63 +10,56 @@ import org.springframework.data.neo4j.core.schema.TargetNode
 // TODO: figure out how to use generics with the mapper
 // naive impl results in a primary label error
 
-class AnyProp (
-        var value: Any? = null,
-        var deletedValue: Any? = null,
+class StringProp(
+        var value: String? = null,
+        var deletedValue: String? = null,
         @DynamicLabels
         var labels: Collection<String>,
-): Entity()
+) : Entity()
 
- class StringProp (
-         var value: String? = null,
-         var deletedValue: String? = null,
+class BooleanProp(
+        var value: Boolean? = null,
+        var deletedValue: Boolean? = null,
         @DynamicLabels
-         var labels: Collection<String>,
-): Entity()
+        var labels: Collection<String>,
+) : Entity()
 
- class BooleanProp (
-         var value: Boolean? = null,
-         var deletedValue: Boolean? = null,
+class NumberProp(
+        var value: Long? = null,
+        var deletedValue: Long? = null,
         @DynamicLabels
-         var labels: Collection<String>,
-): Entity()
+        var labels: Collection<String>,
+) : Entity()
 
- class NumberProp (
-         var value: Long? = null,
-         var deletedValue: Long? = null,
+class RoleProp(
+        var value: Role? = null,
+        var deletedValue: Role? = null,
         @DynamicLabels
-         var labels: Collection<String>,
-): Entity()
+        var labels: Collection<String>,
+) : Entity()
 
- class RoleProp (
-         var value: Role? = null,
-         var deletedValue: Role? = null,
-        @DynamicLabels
-         var labels: Collection<String>,
-): Entity()
-
- class EmailProp (
+class EmailProp(
         @Index(unique = true)
-         var value: String? = null,
-         var deletedValue: String? = null,
+        var value: String? = null,
+        var deletedValue: String? = null,
         @DynamicLabels
-         var labels: Collection<String>,
-): Entity()
+        var labels: Collection<String>,
+) : Entity()
 
-class UserStatusProp (
+class UserStatusProp(
         var value: UserStatus? = null,
         var deletedValue: UserStatus? = null,
         @DynamicLabels
         var labels: Collection<String>,
-): Entity()
+) : Entity()
 
-class OrgNameProp (
+class OrgNameProp(
         @Index(unique = true)
-         var value: String? = null,
-         var deletedValue: String? = null,
+        var value: String? = null,
+        var deletedValue: String? = null,
         @DynamicLabels
-         var labels: Collection<String>,
-): Entity()
+        var labels: Collection<String>,
+) : Entity()
 
 //@Transient
 // class PropNode<T> (

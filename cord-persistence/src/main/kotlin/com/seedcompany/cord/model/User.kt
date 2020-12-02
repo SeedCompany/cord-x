@@ -56,9 +56,9 @@ class User(
 
     var about = about
         set(value) {
-            field = updateMember(
+            field = updateStringMember(
                     about,
-                    aboutH as MutableList<AnyProp>,
+                    aboutH,
                     value,
                     labels = listOf(PropLabel.Property.name)
             ) ?: field
@@ -74,9 +74,9 @@ class User(
 
     var displayFirstName = displayFirstName
         set(value) {
-            field = updateMember(
+            field = updateStringMember(
                     displayFirstName,
-                    displayFirstNameH as MutableList<AnyProp>,
+                    displayFirstNameH,
                     value,
                     listOf(PropLabel.Property.name)
             ) ?: field
@@ -92,9 +92,9 @@ class User(
 
     var displayLastName = displayLastName
         set(value) {
-            field = updateMember(
+            field = updateStringMember(
                     displayLastName,
-                    displayLastNameH as MutableList<AnyProp>,
+                    displayLastNameH,
                     value,
                     listOf(PropLabel.Property.name)
             ) ?: field
@@ -111,9 +111,9 @@ class User(
     @Index
     var email = email
         set(value) {
-            field = updateMember(
+            field = updateEmailMember(
                     email,
-                    emailH as MutableList<AnyProp>,
+                    emailH,
                     value,
                     listOf(PropLabel.Email.name, PropLabel.Property.name)
             ) ?: field
@@ -130,9 +130,9 @@ class User(
 
     var phone = phone
         set(value) {
-            field = updateMember(
+            field = updateStringMember(
                     phone,
-                    phoneH as MutableList<AnyProp>,
+                    phoneH,
                     value,
                     listOf(PropLabel.Property.name)
             ) ?: field
@@ -148,9 +148,9 @@ class User(
 
     var realFirstName = realFirstName
         set(value) {
-            field = updateMember(
+            field = updateStringMember(
                     realFirstName,
-                    realFirstNameH as MutableList<AnyProp>,
+                    realFirstNameH,
                     value,
                     listOf(PropLabel.Property.name)
             ) ?: field
@@ -166,9 +166,9 @@ class User(
 
     var realLastName = realLastName
         set(value) {
-            field = updateMember(
+            field = updateStringMember(
                     realLastName,
-                    realLastNameH as MutableList<AnyProp>,
+                    realLastNameH,
                     value,
                     listOf(PropLabel.Property.name)
             ) ?: field
@@ -217,9 +217,9 @@ class User(
 
     var status = status
         set(value) {
-            field = updateMember(
+            field = updateUserStatusMember(
                     status,
-                    statusH as MutableList<AnyProp>,
+                    statusH,
                     value,
                     listOf(PropLabel.UserStatus.name, PropLabel.Property.name)
             ) ?: field
@@ -235,9 +235,9 @@ class User(
 
     var timezone = timezone
         set(value) {
-            field = updateMember(
+            field = updateStringMember(
                     timezone,
-                    timezoneH as MutableList<AnyProp>,
+                    timezoneH,
                     value,
                     listOf(PropLabel.Property.name)
             ) ?: field
@@ -253,9 +253,9 @@ class User(
 
     var title = title
         set(value) {
-            field = updateMember(
+            field = updateStringMember(
                     title,
-                    titleH as MutableList<AnyProp>,
+                    titleH,
                     value,
                     listOf(PropLabel.Property.name)
             ) ?: field
