@@ -46,12 +46,20 @@ class OrgNameProp(
         var deletedValue: String? = null,
 ) : PropertyNode()
 
-class TProp<T> (
+open class TProp<T> (
         @DynamicLabels
-        var labels: Collection<String> = listOf("Property"),
-        var value: T? = null,
-        var deletedValue: T? = null,
+        open var labels: Collection<String> = listOf("Property"),
+        open var value: T? = null,
+        open var deletedValue: T? = null,
 ): Entity()
+
+class UniqPropNode<T> (
+        @DynamicLabels
+        override var labels: Collection<String> = listOf("Property"),
+        @Index(unique = true)
+        override var value: T? = null,
+        override var deletedValue: T? = null,
+): TProp<T>()
 
 enum class PropName {
     UserAbout,

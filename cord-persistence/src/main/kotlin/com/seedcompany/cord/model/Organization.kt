@@ -1,6 +1,7 @@
 package com.seedcompany.cord.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.neo4j.ogm.annotation.Index
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
 
@@ -43,13 +44,15 @@ class Organization(
         nameH.add(OrgNameProp(name))
     }
 
+    @Index(unique = true)
     var name = name
         set(value) {
-            field = updateMember(
+            field = updateMember2(
                     field = name,
-                    propH = nameH as MutableList<PropertyNode>,
+                    propH = nameH as MutableList<TProp<String>>,
                     value = value,
-                    propNodeFn = ::OrgNameProp
+                    labels = listOf("OrgName", "Property"),
+                    isUnique = true,
             ) ?: field
         }
 }

@@ -4,7 +4,7 @@ import org.springframework.data.neo4j.core.schema.Node
 import java.time.ZonedDateTime
 
 @Node
-open class BaseNode: Entity() {
+open class BaseNode : Entity() {
 
     fun <T> updateMember(
             field: T?,
@@ -27,7 +27,7 @@ open class BaseNode: Entity() {
     fun <T> updateMember2(
             field: T?,
             propH: MutableList<TProp<T>>,
-            value: T,
+            value: T?,
             labels: Collection<String>,
             isUnique: Boolean = false,
     ): T? {
@@ -36,11 +36,12 @@ open class BaseNode: Entity() {
             if (it.deletedAt != null) return@f
             val now = ZonedDateTime.now()
             it.deletedAt = now
-             if (isUnique) {
-
-             }
+            if (isUnique) {
+                it.deletedValue = it.value
+                it.value = null
+            }
         }
-        propH.add(TProp<T>(labels, value))
+        propH.add(TProp(labels, value))
         return value
     }
 
