@@ -6,6 +6,11 @@ import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
 import java.time.ZonedDateTime
 
+enum class UserStatus {
+    Active,
+    Disabled,
+}
+
 interface UserActiveReadOnly {
     fun getAbout()
     fun getDisplayFirstName()
@@ -46,16 +51,16 @@ class User(
     var aboutH: MutableList<StringProp> = mutableListOf()
 
     init {
-        aboutH.add(StringProp(about))
+        aboutH.add(StringProp(value = about, labels = listOf(PropLabel.Property.name)))
     }
 
     var about = about
         set(value) {
             field = updateMember(
                     about,
-                    aboutH as MutableList<PropertyNode>,
+                    aboutH as MutableList<AnyProp>,
                     value,
-                    ::StringProp
+                    labels = listOf(PropLabel.Property.name)
             ) ?: field
         }
 
@@ -64,16 +69,16 @@ class User(
     var displayFirstNameH: MutableList<StringProp> = mutableListOf()
 
     init {
-        displayFirstNameH.add(StringProp(displayFirstName))
+        displayFirstNameH.add(StringProp(value = displayFirstName, labels = listOf(PropLabel.Property.name)))
     }
 
     var displayFirstName = displayFirstName
         set(value) {
             field = updateMember(
                     displayFirstName,
-                    displayFirstNameH as MutableList<PropertyNode>,
+                    displayFirstNameH as MutableList<AnyProp>,
                     value,
-                    ::StringProp
+                    listOf(PropLabel.Property.name)
             ) ?: field
         }
 
@@ -82,16 +87,16 @@ class User(
     var displayLastNameH: MutableList<StringProp> = mutableListOf()
 
     init {
-        displayLastNameH.add(StringProp(displayLastName))
+        displayLastNameH.add(StringProp(value = displayLastName, labels = listOf(PropLabel.Property.name)))
     }
 
     var displayLastName = displayLastName
         set(value) {
             field = updateMember(
                     displayLastName,
-                    displayLastNameH as MutableList<PropertyNode>,
+                    displayLastNameH as MutableList<AnyProp>,
                     value,
-                    ::StringProp
+                    listOf(PropLabel.Property.name)
             ) ?: field
         }
 
@@ -100,7 +105,7 @@ class User(
     var emailH: MutableList<EmailProp> = mutableListOf()
 
     init {
-        emailH.add(EmailProp(email))
+        emailH.add(EmailProp(value = email, labels = listOf(PropLabel.Property.name)))
     }
 
     @Index
@@ -108,9 +113,9 @@ class User(
         set(value) {
             field = updateMember(
                     email,
-                    emailH as MutableList<PropertyNode>,
+                    emailH as MutableList<AnyProp>,
                     value,
-                    ::StringProp
+                    listOf(PropLabel.Email.name, PropLabel.Property.name)
             ) ?: field
         }
 
@@ -120,16 +125,16 @@ class User(
     var phoneH: MutableList<StringProp> = mutableListOf()
 
     init {
-        phoneH.add(StringProp(phone))
+        phoneH.add(StringProp(value = phone, labels = listOf(PropLabel.Property.name)))
     }
 
     var phone = phone
         set(value) {
             field = updateMember(
                     phone,
-                    phoneH as MutableList<PropertyNode>,
+                    phoneH as MutableList<AnyProp>,
                     value,
-                    ::StringProp
+                    listOf(PropLabel.Property.name)
             ) ?: field
         }
 
@@ -138,16 +143,16 @@ class User(
     var realFirstNameH: MutableList<StringProp> = mutableListOf()
 
     init {
-        realFirstNameH.add(StringProp(realFirstName))
+        realFirstNameH.add(StringProp(value = realFirstName, labels = listOf(PropLabel.Property.name)))
     }
 
     var realFirstName = realFirstName
         set(value) {
             field = updateMember(
                     realFirstName,
-                    realFirstNameH as MutableList<PropertyNode>,
+                    realFirstNameH as MutableList<AnyProp>,
                     value,
-                    ::StringProp
+                    listOf(PropLabel.Property.name)
             ) ?: field
         }
 
@@ -156,16 +161,16 @@ class User(
     var realLastNameH: MutableList<StringProp> = mutableListOf()
 
     init {
-        realLastNameH.add(StringProp(realLastName))
+        realLastNameH.add(StringProp(value = realLastName, labels = listOf(PropLabel.Property.name)))
     }
 
     var realLastName = realLastName
         set(value) {
             field = updateMember(
                     realLastName,
-                    realLastNameH as MutableList<PropertyNode>,
+                    realLastNameH as MutableList<AnyProp>,
                     value,
-                    ::StringProp
+                    listOf(PropLabel.Property.name)
             ) ?: field
         }
 
@@ -192,14 +197,14 @@ class User(
             }
             added.forEach f@{ newRoleString ->
                 val newRole = newRoleString as? Role ?: return@f
-                rolesH.add(RoleProp(newRole))
+                rolesH.add(RoleProp(value = newRole, labels = listOf(PropLabel.UserRole.name, PropLabel.Property.name)))
             }
             field = value
         }
 
     init {
         if (roles == null) this.roles = mutableListOf()
-        roles?.forEach { rolesH.add(RoleProp(it)) }
+        roles?.forEach { rolesH.add(RoleProp(value = it, labels = listOf(PropLabel.UserRole.name, PropLabel.Property.name))) }
     }
 
     @Relationship(type = "status")
@@ -207,16 +212,16 @@ class User(
     var statusH: MutableList<UserStatusProp> = mutableListOf()
 
     init {
-        statusH.add(UserStatusProp(status))
+        statusH.add(UserStatusProp(value = status, labels = listOf(PropLabel.Property.name)))
     }
 
     var status = status
         set(value) {
             field = updateMember(
                     status,
-                    statusH as MutableList<PropertyNode>,
+                    statusH as MutableList<AnyProp>,
                     value,
-                    ::UserStatusProp
+                    listOf(PropLabel.UserStatus.name, PropLabel.Property.name)
             ) ?: field
         }
 
@@ -225,16 +230,16 @@ class User(
     var timezoneH: MutableList<StringProp> = mutableListOf()
 
     init {
-        timezoneH.add(StringProp(timezone))
+        timezoneH.add(StringProp(value = timezone, labels = listOf(PropLabel.Property.name)))
     }
 
     var timezone = timezone
         set(value) {
             field = updateMember(
                     timezone,
-                    timezoneH as MutableList<PropertyNode>,
+                    timezoneH as MutableList<AnyProp>,
                     value,
-                    ::StringProp
+                    listOf(PropLabel.Property.name)
             ) ?: field
         }
 
@@ -243,16 +248,16 @@ class User(
     var titleH: MutableList<StringProp> = mutableListOf()
 
     init {
-        titleH.add(StringProp(title))
+        titleH.add(StringProp(value = title, labels = listOf(PropLabel.Property.name)))
     }
 
     var title = title
         set(value) {
             field = updateMember(
                     title,
-                    titleH as MutableList<PropertyNode>,
+                    titleH as MutableList<AnyProp>,
                     value,
-                    ::StringProp
+                    listOf(PropLabel.Property.name)
             ) ?: field
         }
 }

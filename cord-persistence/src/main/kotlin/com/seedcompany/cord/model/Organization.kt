@@ -23,16 +23,16 @@ class Organization(
     var addressH: MutableList<StringProp> = mutableListOf()
 
     init {
-        addressH.add(StringProp(address))
+        addressH.add(StringProp(value = address, labels = listOf("Property")))
     }
 
     var address = address
         set(value) {
             field = updateMember(
                     field = address,
-                    propH = addressH as MutableList<PropertyNode>,
+                    propH = addressH as MutableList<AnyProp>,
                     value = value,
-                    propNodeFn = ::StringProp
+                    labels = listOf(PropLabel.Property.name)
             ) ?: field
         }
 
@@ -41,17 +41,20 @@ class Organization(
     var nameH: MutableList<OrgNameProp> = mutableListOf()
 
     init {
-        nameH.add(OrgNameProp(name))
+        nameH.add(OrgNameProp(
+                value = name,
+                labels = listOf(PropLabel.OrgName.name, PropLabel.Property.name)
+        ))
     }
 
     @Index(unique = true)
     var name = name
         set(value) {
-            field = updateMember2(
+            field = updateMember(
                     field = name,
-                    propH = nameH as MutableList<TProp<String>>,
+                    propH = nameH as MutableList<AnyProp>,
                     value = value,
-                    labels = listOf("OrgName", "Property"),
+                    labels = listOf(PropLabel.OrgName.name, PropLabel.Property.name),
                     isUnique = true,
             ) ?: field
         }

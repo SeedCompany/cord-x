@@ -8,25 +8,7 @@ open class BaseNode : Entity() {
 
     fun <T> updateMember(
             field: T?,
-            propH: MutableList<PropertyNode>,
-            value: T,
-            propNodeFn: (T) -> PropertyNode,
-            isUnique: Boolean = false,
-    ): T? {
-        if (field == value) return null
-        propH.forEach f@{
-            if (it.deletedAt != null) return@f
-            val now = ZonedDateTime.now()
-            it.deletedAt = now
-            // if (isUnique)
-        }
-        propH.add(propNodeFn(value))
-        return value
-    }
-
-    fun <T> updateMember2(
-            field: T?,
-            propH: MutableList<TProp<T>>,
+            propH: MutableList<AnyProp>,
             value: T?,
             labels: Collection<String>,
             isUnique: Boolean = false,
@@ -41,7 +23,11 @@ open class BaseNode : Entity() {
                 it.value = null
             }
         }
-        propH.add(TProp(labels, value))
+//        if (isUnique){
+//            propH.add(UniqPropNode(value = value, labels = labels) as PropNode<T>)
+//        } else {
+//            propH.add(PropNode(value = value, labels = labels))
+//        }
         return value
     }
 
@@ -78,4 +64,12 @@ enum class BaseNodeLabel {
     Story,
     Unavailability,
     User,
+}
+
+enum class PropLabel {
+    Email,
+    OrgName,
+    Property,
+    UserRole,
+    UserStatus,
 }

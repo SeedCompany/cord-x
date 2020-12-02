@@ -1,65 +1,86 @@
 package com.seedcompany.cord.model
 
 import org.neo4j.ogm.annotation.Index
+import org.neo4j.ogm.annotation.Transient
 import org.springframework.data.neo4j.core.schema.DynamicLabels
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.RelationshipProperties
 import org.springframework.data.neo4j.core.schema.TargetNode
 
-@Node(labels = ["PropertyNode", "Property"])
-open class PropertyNode () : Entity() {
-    @DynamicLabels
-    var labels: Collection<String> = listOf("Property")
-}
-
-@Node(labels = ["StringProp", "Property"])
-open class StringProp (
-        open var value: String?
-) : PropertyNode()
-
-@Node(labels = ["BooleanProp", "Property"])
-open class BooleanProp (
-        var value: Boolean?
-) : PropertyNode()
-
-@Node(labels = ["NumberProp", "Property"])
-open class NumberProp (
-        var value: Long?
-) : PropertyNode()
-
-@Node(labels = ["Role", "Property"])
-class RoleProp(
-        var value: Role? = null,
-) : PropertyNode()
-
-@Node(labels = ["Email", "Property"])
-class EmailProp(
-        @Index(unique = true)
-        var value: String? = null,
-        var deletedValue: String? = null,
-) : PropertyNode()
-
-@Node(labels = ["OrgName", "Property"])
-class OrgNameProp(
-        @Index(unique = true)
-        var value: String? = null,
-        var deletedValue: String? = null,
-) : PropertyNode()
-
-open class TProp<T> (
+class AnyProp (
+        var value: Any? = null,
+        var deletedValue: Any? = null,
         @DynamicLabels
-        open var labels: Collection<String> = listOf("Property"),
-        open var value: T? = null,
-        open var deletedValue: T? = null,
+        var labels: Collection<String>,
 ): Entity()
 
-class UniqPropNode<T> (
+ class StringProp (
+         var value: String? = null,
+         var deletedValue: String? = null,
         @DynamicLabels
-        override var labels: Collection<String> = listOf("Property"),
+         var labels: Collection<String>,
+): Entity()
+
+ class BooleanProp (
+         var value: Boolean? = null,
+         var deletedValue: Boolean? = null,
+        @DynamicLabels
+         var labels: Collection<String>,
+): Entity()
+
+ class NumberProp (
+         var value: Long? = null,
+         var deletedValue: Long? = null,
+        @DynamicLabels
+         var labels: Collection<String>,
+): Entity()
+
+ class RoleProp (
+         var value: Role? = null,
+         var deletedValue: Role? = null,
+        @DynamicLabels
+         var labels: Collection<String>,
+): Entity()
+
+ class EmailProp (
         @Index(unique = true)
-        override var value: T? = null,
-        override var deletedValue: T? = null,
-): TProp<T>()
+         var value: String? = null,
+         var deletedValue: String? = null,
+        @DynamicLabels
+         var labels: Collection<String>,
+): Entity()
+
+class UserStatusProp (
+        var value: UserStatus? = null,
+        var deletedValue: UserStatus? = null,
+        @DynamicLabels
+        var labels: Collection<String>,
+): Entity()
+
+class OrgNameProp (
+        @Index(unique = true)
+         var value: String? = null,
+         var deletedValue: String? = null,
+        @DynamicLabels
+         var labels: Collection<String>,
+): Entity()
+
+//@Transient
+// class PropNode<T> (
+//         var value: T? = null,
+//         var deletedValue: T? = null,
+//        @DynamicLabels
+//         var labels: Collection<String>,
+//): Entity()
+//
+//@Transient
+//class UniqPropNode<T> (
+//        @Index(unique = true)
+//        var value: T? = null,
+//        var deletedValue: T? = null,
+//        @DynamicLabels
+//        var labels: Collection<String>,
+//): Entity()
 
 enum class PropName {
     UserAbout,
