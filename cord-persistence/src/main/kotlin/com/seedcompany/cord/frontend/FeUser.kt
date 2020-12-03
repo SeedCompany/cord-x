@@ -16,6 +16,7 @@ class FeUser: FeBaseNode() {
     var about: FeSecureProperty<String> = FeSecureProperty()
     var displayFirstName: FeSecureProperty<String> = FeSecureProperty()
     var displayLastName: FeSecureProperty<String> = FeSecureProperty()
+    var education: FeSecureProperty<String> = FeSecureProperty()
     var email: FeSecureProperty<String> = FeSecureProperty()
     var phone: FeSecureProperty<String> = FeSecureProperty()
     var realFirstName: FeSecureProperty<String> = FeSecureProperty()

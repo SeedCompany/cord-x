@@ -2,7 +2,6 @@ package com.seedcompany.cord.service
 
 import com.seedcompany.cord.dto.GlobalPermissionsIn
 import com.seedcompany.cord.dto.ReadIn
-import com.seedcompany.cord.dto.UserOut
 import com.seedcompany.cord.frontend.SecureReadIn
 import com.seedcompany.cord.frontend.FeUser
 import com.seedcompany.cord.frontend.FeUserOut
@@ -22,7 +21,7 @@ class UserApi(
     suspend fun read(@RequestBody request: SecureReadIn): FeUserOut {
 
         // get global permissions of requester
-        val grants = authorizationService.readGlobalPermissions(GlobalPermissionsIn((request.requesterId))).grants
+        val grants = authorizationService.readGlobalPermissions(GlobalPermissionsIn((request.requestorId))).grants
                 ?: return FeUserOut(message = "something went wrong")
 
         if (grants.isEmpty()) return FeUserOut(message = "no grants available to this user")
@@ -31,7 +30,6 @@ class UserApi(
         if (userDto.user == null) return FeUserOut(message = "user not found")
 
         val feUser = FeUser()
-
         feUser.id = userDto.user.id
         feUser.createdAt = userDto.user.createdAt
 
@@ -46,6 +44,10 @@ class UserApi(
         feUser.displayLastName.value = if (grants[PropName.UserDisplayLastName]?.canRead == true ) userDto.user.displayLastName else null
         feUser.displayLastName.canRead = grants[PropName.UserDisplayLastName]?.canRead ?: false
         feUser.displayLastName.canEdit = grants[PropName.UserDisplayLastName]?.canEdit ?: false
+
+        feUser.education.value = "todo"
+        feUser.education.canRead = true
+        feUser.education.canEdit = true
 
         feUser.email.value = if (grants[PropName.UserEmail]?.canRead == true ) userDto.user.email else null
         feUser.email.canRead = grants[PropName.UserEmail]?.canRead ?: false
