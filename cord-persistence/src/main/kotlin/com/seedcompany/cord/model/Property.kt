@@ -78,16 +78,16 @@ class OrgNameProp(
 //        var labels: Collection<String>,
 //): Entity()
 
-enum class PropName {
-    UserAbout,
-    UserDisplayFirstName,
-    UserDisplayLastName,
-    UserEmail,
-    UserPhone,
-    UserRealFirstName,
-    UserRealLastName,
-    UserRoles,
-    UserStatus,
-    UserTimezone,
-    UserTitle,
+enum class PropName(val str: String) {
+    UserAbout("about"),
+    UserDisplayFirstName("displayFirstName"),
+    UserDisplayLastName("displayLastName"),
+    UserEmail("email"),
+    UserPhone("phone"),
+    UserRealFirstName("realFirstName"),
+    UserRealLastName("realLastName"),
+    UserRoles("roles"),
+    UserStatus("status"),
+    UserTimezone("timezone"),
+    UserTitle("title"),
 }

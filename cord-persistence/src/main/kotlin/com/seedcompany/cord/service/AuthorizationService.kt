@@ -36,6 +36,7 @@ class AuthorizationService(
                 }
             }
         }
+
         return GlobalPermissionsOut(success = true, grants = grants)
     }
 
