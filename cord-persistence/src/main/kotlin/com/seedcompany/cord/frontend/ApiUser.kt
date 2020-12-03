@@ -3,16 +3,23 @@ package com.seedcompany.cord.frontend
 import com.seedcompany.cord.dto.ErrorCode
 import com.seedcompany.cord.dto.GenericOut
 import com.seedcompany.cord.model.Role
+import com.seedcompany.cord.model.User
 import com.seedcompany.cord.model.UserStatus
 
-class FeUserOut(
-        var user: FeUser? = null,
+class ApiUserOut(
+        var user: ApiUser? = null,
         success: Boolean = false,
         error: ErrorCode = ErrorCode.NO_ERROR,
         message: String? = null,
 ) : GenericOut(success, error, message)
 
-class FeUser: FeBaseNode() {
+class ApiUserUpdateIn(
+        var user: User,
+        var id: String,
+        var requestorId: String,
+)
+
+class ApiUser: ApiBaseNode() {
     var about: FeSecureProperty<String> = FeSecureProperty()
     var displayFirstName: FeSecureProperty<String> = FeSecureProperty()
     var displayLastName: FeSecureProperty<String> = FeSecureProperty()

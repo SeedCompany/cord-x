@@ -2,13 +2,13 @@ package com.seedcompany.cord.service
 
 import com.seedcompany.cord.common.AllRoles
 import com.seedcompany.cord.dto.BootstrapIn
+import com.seedcompany.cord.dto.BootstrapOut
 import com.seedcompany.cord.dto.GenericOut
 import com.seedcompany.cord.dto.ReplaceIdIn
 import com.seedcompany.cord.model.*
 import com.seedcompany.cord.repository.*
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
-import org.apache.commons.collections4.ListUtils
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,7 +29,7 @@ class AdminService(
     @PostMapping("/replaceId")
     suspend fun replaceId(@RequestBody request: ReplaceIdIn): GenericOut {
         val node = baseRepo.replaceId(oldId = request.oldId, newId = request.newId).awaitFirstOrNull()
-        return if (node == null){
+        return if (node == null) {
             GenericOut(message = "something went wrong")
         } else {
             GenericOut(true)
@@ -37,7 +37,7 @@ class AdminService(
     }
 
     @PostMapping("/bootstrap")
-    suspend fun bootstrap(@RequestBody request: BootstrapIn): GenericOut {
+    suspend fun bootstrap(@RequestBody request: BootstrapIn): BootstrapOut {
 
         // global SGs/roles
         GlobalRole.values().forEach {
@@ -52,7 +52,7 @@ class AdminService(
                 globalSgRepo.save(newSg).awaitFirstOrNull()
             }
         }
-        
+
         // default org
         val org = orgRepo.findByName(request.defaultOrgName).awaitFirstOrNull()
 
@@ -66,10 +66,10 @@ class AdminService(
         }
 
         // root user
-        val rootUser = userActiveReadOnlyRepo.findByEmail(request.rootEmail).awaitFirstOrNull()
+        var rootUser = userRepo.findByEmail(request.rootEmail).awaitFirstOrNull()
 
         if (rootUser == null) {
-            val newRootUser = User(
+            rootUser = User(
                     about = "",
                     displayFirstName = "root",
                     displayLastName = "root",
@@ -84,10 +84,10 @@ class AdminService(
             )
 
             val adminSg = globalSgRepo.findByGlobalRole(Role.Administrator).awaitFirst()
-            adminSg.members.add(newRootUser)
+            adminSg.members.add(rootUser)
             globalSgRepo.save(adminSg).awaitFirstOrNull()
         }
 
-        return GenericOut(true)
+        return BootstrapOut(success = true, rootAdminId = rootUser.id)
     }
 }

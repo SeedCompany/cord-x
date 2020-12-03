@@ -15,11 +15,6 @@ class AuthorizationService(
         val authorizationRepo: GlobalSecurityGroupRepository,
 ) {
 
-    @PostMapping("/processBaseNode")
-    suspend fun processBaseNode(@RequestBody request: ProcessBaseNodeIn): GenericOut {
-        return GenericOut(true)
-    }
-
     @PostMapping("/readGlobalPermissions")
     suspend fun readGlobalPermissions(@RequestBody request: GlobalPermissionsIn): GlobalPermissionsOut {
         val user = userRepo.findById(request.id).awaitFirstOrNull()

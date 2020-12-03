@@ -35,12 +35,6 @@ class UserService(
 
             userRepo.save(user).awaitFirstOrNull()
 
-    //        authorizationService.processBaseNode(ProcessBaseNodeIn(
-    //                baseNodeId = user.id,
-    //                label = BaseNodeLabel.User,
-    //                creatorUserId = user.id,
-    //        ))
-
             return CreateOut(id = user.id, success = true)
 
         } catch (e: Exception) { // TODO: Use real exception
