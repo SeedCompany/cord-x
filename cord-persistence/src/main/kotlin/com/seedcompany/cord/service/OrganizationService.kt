@@ -71,7 +71,7 @@ class OrganizationService (
 
         orgRepo.deleteById(request.id).awaitFirstOrNull()
 
-        val check = orgRepo.findById(request.id).awaitFirstOrNull()
+        orgRepo.findById(request.id).awaitFirstOrNull()
                 ?: return GenericOut(message = "org not found", error = ErrorCode.ID_NOT_FOUND)
 
         return GenericOut(message = "something went wrong", error = ErrorCode.UNKNOWN_ERROR)

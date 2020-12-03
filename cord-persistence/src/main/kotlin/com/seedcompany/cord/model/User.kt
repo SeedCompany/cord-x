@@ -108,7 +108,7 @@ class User(
         emailH.add(EmailProp(value = email, labels = listOf(PropLabel.Property.name)))
     }
 
-    @Index
+    @Index(unique = true)
     var email = email
         set(value) {
             field = updateEmailMember(
@@ -184,19 +184,19 @@ class User(
             if (value == null) return
             val added = value.minus(field!!.toHashSet())
             val removed = roles?.minus(value)
-            removed?.forEach f@{ removedRoleString ->
-                val removedRole = removedRoleString as? Role ?: return@f
+            removed?.forEach a@{ removedRoleString ->
+                val removedRole = removedRoleString as? Role ?: return@a
                 // find each node in the history list and set the deletedAt prop
-                rolesH.forEach f@{ roleNode ->
-                    if (roleNode.deletedAt != null) return@f
+                rolesH.forEach b@{ roleNode ->
+                    if (roleNode.deletedAt != null) return@b
                     if (roleNode.value.toString() == removedRole.name) {
                         val now = ZonedDateTime.now()
                         roleNode.deletedAt = now
                     }
                 }
             }
-            added.forEach f@{ newRoleString ->
-                val newRole = newRoleString as? Role ?: return@f
+            added.forEach c@{ newRoleString ->
+                val newRole = newRoleString as? Role ?: return@c
                 rolesH.add(RoleProp(value = newRole, labels = listOf(PropLabel.UserRole.name, PropLabel.Property.name)))
             }
             field = value
