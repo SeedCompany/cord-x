@@ -4,12 +4,12 @@ import com.seedcompany.cord.common.AllRoles
 import com.seedcompany.cord.dto.ErrorCode
 import com.seedcompany.cord.dto.GlobalPermissionsIn
 import com.seedcompany.cord.dto.ReadIn
-import com.seedcompany.cord.frontend.SecureReadIn
-import com.seedcompany.cord.frontend.ApiUser
-import com.seedcompany.cord.frontend.ApiUserOut
-import com.seedcompany.cord.frontend.ApiUserUpdateIn
+import com.seedcompany.cord.dto.TokenIn
+import com.seedcompany.cord.frontend.*
+import com.seedcompany.cord.model.Perm
 import com.seedcompany.cord.model.PropName
 import com.seedcompany.cord.model.Role
+import com.seedcompany.cord.repository.TokenRepository
 import com.seedcompany.cord.repository.UserRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/user")
 class UserApi(
+        val tokenRepo: TokenRepository,
         val userRepo: UserRepository,
         val userService: UserService,
         val authorizationService: AuthorizationService,
@@ -27,9 +28,15 @@ class UserApi(
     @PostMapping("/read")
     suspend fun read(@RequestBody request: SecureReadIn): ApiUserOut {
 
-        // get global permissions of requester
-        var grants = authorizationService.readGlobalPermissions(GlobalPermissionsIn((request.requestorId))).grants
-                ?: return ApiUserOut(message = "something went wrong")
+        var grants: Map<PropName, Perm>
+
+        // if user isn't known, treat as anonymous request
+        if (request.requestorId == null) grants = AllRoles.grants(Role.Anonymous)
+            else {
+                // get global permissions of requester
+                grants = authorizationService.readGlobalPermissions(GlobalPermissionsIn((request.requestorId))).grants
+                        ?: return ApiUserOut(message = "something went wrong")
+        }
 
         // if the user is accessing their own profile, give them admin rights
         if (request.id == request.requestorId) grants = AllRoles.grants(Role.Administrator)
@@ -93,6 +100,16 @@ class UserApi(
 
         return ApiUserOut(success = true, user = apiUser)
 
+    }
+
+    @PostMapping("/userFromToken")
+    suspend fun userFromTokenUnsafe(@RequestBody request: TokenIn): ApiUserOut{
+        val token = tokenRepo.findById(request.value).awaitFirstOrNull()
+                ?: return ApiUserOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
+
+        if (token.user == null) return ApiUserOut(message = "token not in use")
+
+        return read(SecureReadIn(id = token.user!!.id, requestorId = token.user!!.id))
     }
 
     @PostMapping("/update")
