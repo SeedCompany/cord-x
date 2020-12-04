@@ -14,5 +14,5 @@ class Token (
         @JsonIgnore
         var user: User? = null,
 ) {
-        val createdAt: ZonedDateTime = ZonedDateTime.now()
+        var createdAt: ZonedDateTime = ZonedDateTime.now()
 }

@@ -75,7 +75,6 @@ class AuthenticationService(
     @PostMapping("/register")
     suspend fun register(@RequestBody request: User): GenericOut{
         val newUser = userService.create(request)
-
         return GenericOut(true)
     }
 
