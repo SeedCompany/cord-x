@@ -25,6 +25,13 @@ class AuthenticationService(
         return GenericOut(true)
     }
 
+    @PostMapping("/getEmailToken")
+    suspend fun getEmailToken(@RequestBody request: ReadIn): EmailTokenOut {
+        val emailToken = emailTokenRepo.findById(request.id).awaitFirstOrNull()
+                ?: return EmailTokenOut(message = "credentials not found", error = ErrorCode.ID_NOT_FOUND)
+        return EmailTokenOut(success = true, email = emailToken.email, token = emailToken.id, createdAt = emailToken.createdAt)
+    }
+
     @PostMapping("/loginGetCreds")
     suspend fun loginGetCreds(@RequestBody request: LoginGetCredsIn): PashOut {
         val token = tokenRepo.findById(request.token).awaitFirstOrNull()
