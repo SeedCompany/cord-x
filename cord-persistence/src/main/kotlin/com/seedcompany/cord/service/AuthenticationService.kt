@@ -72,12 +72,6 @@ class AuthenticationService(
         return PashOut(success = true, pash = user.password)
     }
 
-    @PostMapping("/register")
-    suspend fun register(@RequestBody request: User): GenericOut{
-        val newUser = userService.create(request)
-        return GenericOut(true)
-    }
-
     @PostMapping("/resetPassword")
     suspend fun resetPassword(@RequestBody request: ResetPasswordIn): GenericOut {
         tokenRepo.deleteById(request.emailToken).awaitFirstOrNull()
