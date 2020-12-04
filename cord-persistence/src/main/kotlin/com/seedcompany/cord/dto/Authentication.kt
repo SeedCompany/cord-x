@@ -1,9 +1,5 @@
 package com.seedcompany.cord.dto
 
-class TokenIn(
-        var value: String,
-)
-
 class LoginGetCredsIn(
         val token: String,
         val email: String,

@@ -100,12 +100,10 @@ class UserApi(
     }
 
     @PostMapping("/userFromTokenUnsafe")
-    suspend fun userFromTokenUnsafe(@RequestBody request: TokenIn): ApiUserOut{
-        val token = tokenRepo.findById(request.value).awaitFirstOrNull()
+    suspend fun userFromTokenUnsafe(@RequestBody request: ReadIn): ApiUserOut{
+        val token = tokenRepo.findById(request.id).awaitFirstOrNull()
                 ?: return ApiUserOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
-
         if (token.user == null) return ApiUserOut(message = "token not in use")
-
         return read(SecureReadIn(id = token.user!!.id, requestorId = token.user!!.id))
     }
 
@@ -137,13 +135,4 @@ class UserApi(
         return read(SecureReadIn(id = request.id, requestorId = request.requestorId))
     }
 
-    @PostMapping("/validateToken")
-    suspend fun validateToken(@RequestBody request: TokenIn): IdOut{
-        val token = tokenRepo.findById(request.value).awaitFirstOrNull()
-                ?: return IdOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
-
-        if (token.user == null) return IdOut(success = true)
-
-        return IdOut(success = true, id = token.user!!.id)
-    }
 }

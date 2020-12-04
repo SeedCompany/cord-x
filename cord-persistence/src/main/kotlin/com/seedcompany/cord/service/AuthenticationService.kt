@@ -74,14 +74,22 @@ class AuthenticationService(
     }
 
     @PostMapping("/token/create")
-    suspend fun readGlobalPermissions(@RequestBody request: TokenIn): GenericOut {
-        val token = Token(id = request.value)
+    suspend fun readGlobalPermissions(@RequestBody request: ReadIn): GenericOut {
+        val token = Token(id = request.id)
         tokenRepo.save(token).awaitFirstOrNull()
         return GenericOut(true)
     }
 
     @PostMapping("/verifyToken")
-    suspend fun verifyToken(@RequestBody request: ReadIn): GenericOut {
+    suspend fun verifyToken(@RequestBody request: ReadIn): IdOut {
+        val token = tokenRepo.findById(request.id).awaitFirstOrNull()
+                ?: return IdOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
+        if (token.user == null) return IdOut(success = true)
+        return IdOut(success = true, id = token.user!!.id)
+    }
+
+    @PostMapping("/verifyEmail")
+    suspend fun verifyEmail(@RequestBody request: ReadIn): GenericOut {
         val token = tokenRepo.findById(request.id).awaitFirstOrNull()
                 ?: return GenericOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
         return GenericOut(success = true)
