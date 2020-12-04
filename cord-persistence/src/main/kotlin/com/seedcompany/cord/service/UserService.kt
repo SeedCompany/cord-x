@@ -24,6 +24,7 @@ class UserService(
                     displayFirstName = request.displayFirstName,
                     displayLastName = request.displayLastName,
                     email = request.email,
+                    password = request.password,
                     phone = request.phone,
                     realFirstName = request.realFirstName,
                     realLastName = request.realLastName,

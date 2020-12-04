@@ -74,6 +74,7 @@ class AdminService(
                     displayFirstName = "root",
                     displayLastName = "root",
                     email = request.rootEmail,
+                    password = request.rootPash,
                     phone = "+1 (817) 557-2121", // Seed office
                     realFirstName = "root",
                     realLastName = "root",
