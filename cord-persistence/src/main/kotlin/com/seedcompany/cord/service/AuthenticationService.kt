@@ -89,9 +89,9 @@ class AuthenticationService(
     }
 
     @PostMapping("/verifyEmail")
-    suspend fun verifyEmail(@RequestBody request: ReadIn): GenericOut {
-        val token = tokenRepo.findById(request.id).awaitFirstOrNull()
-                ?: return GenericOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
+    suspend fun verifyEmail(@RequestBody request: VerifyEmailIn): GenericOut {
+        val user = userRepo.findByEmail(request.email).awaitFirstOrNull()
+                ?: return GenericOut(message = "email not found", error = ErrorCode.ID_NOT_FOUND)
         return GenericOut(success = true)
     }
 }

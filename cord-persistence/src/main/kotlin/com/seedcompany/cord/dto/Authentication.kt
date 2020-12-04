@@ -16,3 +16,7 @@ class SetPasswordIn(
         val id: String,
         val passowrd: String,
 )
+
+class VerifyEmailIn(
+        val email: String,
+)
