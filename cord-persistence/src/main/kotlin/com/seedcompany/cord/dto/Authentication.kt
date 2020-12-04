@@ -14,6 +14,11 @@ class PashOut(
         message: String? = null,
 ) : GenericOut(success, error, message)
 
+class ResetPasswordIn(
+        val emailToken: String,
+        val email: String,
+        val passowrd: String,
+)
 class SetPasswordIn(
         val id: String,
         val passowrd: String,

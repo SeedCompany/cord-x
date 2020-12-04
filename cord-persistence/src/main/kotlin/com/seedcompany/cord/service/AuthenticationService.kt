@@ -79,6 +79,18 @@ class AuthenticationService(
         return GenericOut(true)
     }
 
+    @PostMapping("/resetPassword")
+    suspend fun resetPassword(@RequestBody request: ResetPasswordIn): GenericOut {
+        tokenRepo.deleteById(request.emailToken).awaitFirstOrNull()
+        val user = userRepo.findByEmail(request.email).awaitFirstOrNull()
+                ?: return PashOut(message = "user not found", error = ErrorCode.ID_NOT_FOUND)
+
+        user.password = request.passowrd
+        userRepo.save(user).awaitFirstOrNull()
+
+        return GenericOut(success = true)
+    }
+
     @PostMapping("/setPassword")
     suspend fun setPassword(@RequestBody request: SetPasswordIn): GenericOut {
         val user = userRepo.findById(request.id).awaitFirstOrNull()
