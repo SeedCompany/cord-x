@@ -7,7 +7,7 @@ import java.time.ZonedDateTime
 
 @Node
 class Token (
-        var value: String,
+        override var id: String,
         @Relationship(type = "token", direction = Relationship.Direction.INCOMING)
         @JsonIgnore
         var user: User? = null,

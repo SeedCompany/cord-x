@@ -9,7 +9,7 @@ import java.util.*
 open class Entity {
     @Id
     @GeneratedValue(UUIDStringGenerator::class)
-    lateinit var id: String
+    open lateinit var id: String
     var createdAt: ZonedDateTime = ZonedDateTime.now()
     var modifiedAt: ZonedDateTime = ZonedDateTime.now()
     var deletedAt: ZonedDateTime? = null
