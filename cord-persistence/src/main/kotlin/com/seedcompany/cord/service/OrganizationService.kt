@@ -5,6 +5,7 @@ import com.seedcompany.cord.model.Organization
 import com.seedcompany.cord.repository.OrganizationActiveReadOnlyRepository
 import com.seedcompany.cord.repository.OrganizationRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -43,6 +44,7 @@ class OrganizationService (
     }
 
     @PostMapping("/update")
+    @Transactional
     suspend fun update(@RequestBody request: Organization): GenericOut {
 
         val org = orgRepo.findById(request.id).awaitFirstOrNull()
@@ -59,6 +61,7 @@ class OrganizationService (
     }
 
     @PostMapping("/delete")
+    @Transactional
     suspend fun delete(@RequestBody request: ReadIn): GenericOut {
 
         val org = orgRepo.findById(request.id).awaitFirstOrNull()

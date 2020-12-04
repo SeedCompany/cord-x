@@ -8,6 +8,7 @@ import com.seedcompany.cord.repository.EmailTokenRepository
 import com.seedcompany.cord.repository.TokenRepository
 import com.seedcompany.cord.repository.UserRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -19,6 +20,7 @@ class AuthenticationService(
         val userService: UserService,
 ) {
     @PostMapping("/emailTokenCreate")
+    @Transactional
     suspend fun emailTokenCreate(@RequestBody request: EmailTokenCreateIn): GenericOut {
         val emailToken = EmailToken(id = request.id, email = request.email)
         emailTokenRepo.save(emailToken).awaitFirstOrNull()
@@ -43,12 +45,14 @@ class AuthenticationService(
     }
 
     @PostMapping("/loginConnect")
+    @Transactional
     suspend fun loginConnect(@RequestBody request: LoginGetCredsIn): IdOut {
         val token = tokenRepo.findById(request.token).awaitFirstOrNull()
                 ?: return IdOut(message = "credentials not found", error = ErrorCode.ID_NOT_FOUND)
         val user = userRepo.findByEmail(request.email).awaitFirstOrNull()
                 ?: return IdOut(message = "credentials not found", error = ErrorCode.ID_NOT_FOUND)
 
+        tokenRepo.deleteTokenRelationships(token.id).awaitFirstOrNull()
         token.user = user
         tokenRepo.save(token).awaitFirstOrNull()
 
@@ -56,10 +60,11 @@ class AuthenticationService(
     }
 
     @PostMapping("/logout")
+    @Transactional
     suspend fun logout(@RequestBody request: ReadIn): GenericOut {
         val token = tokenRepo.findById(request.id).awaitFirstOrNull()
                 ?: return GenericOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
-        token.user = null
+        tokenRepo.deleteTokenRelationships(token.id).awaitFirstOrNull()
         tokenRepo.save(token).awaitFirstOrNull()
         return GenericOut(true)
     }
@@ -73,6 +78,7 @@ class AuthenticationService(
     }
 
     @PostMapping("/resetPassword")
+    @Transactional
     suspend fun resetPassword(@RequestBody request: ResetPasswordIn): GenericOut {
         tokenRepo.deleteById(request.emailToken).awaitFirstOrNull()
         val user = userRepo.findByEmail(request.email).awaitFirstOrNull()
@@ -85,6 +91,7 @@ class AuthenticationService(
     }
 
     @PostMapping("/setPassword")
+    @Transactional
     suspend fun setPassword(@RequestBody request: SetPasswordIn): GenericOut {
         val user = userRepo.findById(request.id).awaitFirstOrNull()
                 ?: return PashOut(message = "user not found", error = ErrorCode.ID_NOT_FOUND)

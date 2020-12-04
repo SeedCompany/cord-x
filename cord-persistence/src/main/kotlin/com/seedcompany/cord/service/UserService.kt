@@ -5,6 +5,7 @@ import com.seedcompany.cord.repository.UserRepository
 import com.seedcompany.cord.model.User
 import com.seedcompany.cord.repository.UserActiveReadOnlyRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import java.time.ZonedDateTime
 
@@ -59,6 +60,7 @@ class UserService(
     }
 
     @PostMapping("/update")
+    @Transactional
     suspend fun update(@RequestBody request: User): GenericOut {
 
         val user = userRepo.findById(request.id).awaitFirstOrNull()
@@ -84,6 +86,7 @@ class UserService(
     }
 
     @PostMapping("/delete")
+    @Transactional
     suspend fun delete(@RequestBody request: ReadIn): GenericOut {
 
         val user = userRepo.findById(request.id).awaitFirstOrNull()

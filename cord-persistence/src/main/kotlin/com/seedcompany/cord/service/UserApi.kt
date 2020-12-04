@@ -9,6 +9,7 @@ import com.seedcompany.cord.model.Role
 import com.seedcompany.cord.repository.TokenRepository
 import com.seedcompany.cord.repository.UserRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -108,6 +109,7 @@ class UserApi(
     }
 
     @PostMapping("/update")
+    @Transactional
     suspend fun update(@RequestBody request: ApiUserUpdateIn): ApiUserOut {
 
         val user = userRepo.findById(request.id).awaitFirstOrNull()

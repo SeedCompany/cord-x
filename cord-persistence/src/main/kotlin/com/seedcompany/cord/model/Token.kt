@@ -8,11 +8,10 @@ import java.time.ZonedDateTime
 
 @Node
 class Token (
-        @Id
-        var id: String,
-        @Relationship(type = "token", direction = Relationship.Direction.INCOMING)
+        @Id var id: String,
+        var createdAt: ZonedDateTime = ZonedDateTime.now(),
+
+        @Relationship(type = "user", direction = Relationship.Direction.OUTGOING)
         @JsonIgnore
         var user: User? = null,
-) {
-        var createdAt: ZonedDateTime = ZonedDateTime.now()
-}
+)

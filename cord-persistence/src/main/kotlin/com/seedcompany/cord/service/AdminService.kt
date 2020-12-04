@@ -9,6 +9,7 @@ import com.seedcompany.cord.model.*
 import com.seedcompany.cord.repository.*
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -37,6 +38,7 @@ class AdminService(
     }
 
     @PostMapping("/bootstrap")
+    @Transactional
     suspend fun bootstrap(@RequestBody request: BootstrapIn): BootstrapOut {
 
         // global SGs/roles
