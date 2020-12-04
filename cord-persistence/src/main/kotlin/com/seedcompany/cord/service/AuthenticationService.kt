@@ -79,4 +79,11 @@ class AuthenticationService(
         tokenRepo.save(token).awaitFirstOrNull()
         return GenericOut(true)
     }
+
+    @PostMapping("/verifyToken")
+    suspend fun verifyToken(@RequestBody request: ReadIn): GenericOut {
+        val token = tokenRepo.findById(request.id).awaitFirstOrNull()
+                ?: return GenericOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
+        return GenericOut(success = true)
+    }
 }
