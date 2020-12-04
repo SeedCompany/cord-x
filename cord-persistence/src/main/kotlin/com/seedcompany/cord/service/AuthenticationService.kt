@@ -1,8 +1,10 @@
 package com.seedcompany.cord.service
 
 import com.seedcompany.cord.dto.*
+import com.seedcompany.cord.model.EmailToken
 import com.seedcompany.cord.model.Token
 import com.seedcompany.cord.model.User
+import com.seedcompany.cord.repository.EmailTokenRepository
 import com.seedcompany.cord.repository.TokenRepository
 import com.seedcompany.cord.repository.UserRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
@@ -11,11 +13,19 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/authentication")
 class AuthenticationService(
+        val emailTokenRepo: EmailTokenRepository,
         val tokenRepo: TokenRepository,
         val userRepo: UserRepository,
         val userService: UserService,
 ) {
-    @PostMapping("/login/getCreds")
+    @PostMapping("/emailTokenCreate")
+    suspend fun emailTokenCreate(@RequestBody request: EmailTokenCreateIn): GenericOut {
+        val emailToken = EmailToken(id = request.id, email = request.email)
+        emailTokenRepo.save(emailToken).awaitFirstOrNull()
+        return GenericOut(true)
+    }
+
+    @PostMapping("/loginGetCreds")
     suspend fun loginGetCreds(@RequestBody request: LoginGetCredsIn): PashOut {
         val token = tokenRepo.findById(request.token).awaitFirstOrNull()
                 ?: return PashOut(message = "credentials not found", error = ErrorCode.ID_NOT_FOUND)
@@ -25,7 +35,7 @@ class AuthenticationService(
         return PashOut(success = true, pash = user.password)
     }
 
-    @PostMapping("/login/connect")
+    @PostMapping("/loginConnect")
     suspend fun loginConnect(@RequestBody request: LoginGetCredsIn): IdOut {
         val token = tokenRepo.findById(request.token).awaitFirstOrNull()
                 ?: return IdOut(message = "credentials not found", error = ErrorCode.ID_NOT_FOUND)
@@ -73,7 +83,7 @@ class AuthenticationService(
         return GenericOut(success = true)
     }
 
-    @PostMapping("/token/create")
+    @PostMapping("/tokenCreate")
     suspend fun readGlobalPermissions(@RequestBody request: ReadIn): GenericOut {
         val token = Token(id = request.id)
         tokenRepo.save(token).awaitFirstOrNull()

@@ -20,3 +20,8 @@ class SetPasswordIn(
 class VerifyEmailIn(
         val email: String,
 )
+
+class EmailTokenCreateIn(
+        val id: String,
+        val email: String,
+)
