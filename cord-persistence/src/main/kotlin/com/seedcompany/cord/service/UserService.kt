@@ -17,7 +17,7 @@ class UserService(
 ){
 
     @PostMapping("/create")
-    suspend fun create(@RequestBody request: User): CreateOut {
+    suspend fun create(@RequestBody request: User): IdOut {
         try {
             val user = User(
                     about = request.about,
@@ -35,13 +35,13 @@ class UserService(
 
             userRepo.save(user).awaitFirstOrNull()
 
-            return CreateOut(id = user.id, success = true)
+            return IdOut(id = user.id, success = true)
 
         } catch (e: Exception) { // TODO: Use real exception
             if (e.message?.contains("ConstraintValidation") == true )
-                return CreateOut(message = "duplicate email", error = ErrorCode.UNIQUENESS_VIOLATION)
+                return IdOut(message = "duplicate email", error = ErrorCode.UNIQUENESS_VIOLATION)
         }
-        return CreateOut(message = "something went wrong")
+        return IdOut(message = "something went wrong")
     }
 
     @PostMapping("/read")

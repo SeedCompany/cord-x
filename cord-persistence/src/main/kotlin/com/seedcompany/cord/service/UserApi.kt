@@ -1,10 +1,7 @@
 package com.seedcompany.cord.service
 
 import com.seedcompany.cord.common.AllRoles
-import com.seedcompany.cord.dto.ErrorCode
-import com.seedcompany.cord.dto.GlobalPermissionsIn
-import com.seedcompany.cord.dto.ReadIn
-import com.seedcompany.cord.dto.TokenIn
+import com.seedcompany.cord.dto.*
 import com.seedcompany.cord.frontend.*
 import com.seedcompany.cord.model.Perm
 import com.seedcompany.cord.model.PropName
@@ -102,7 +99,7 @@ class UserApi(
 
     }
 
-    @PostMapping("/userFromToken")
+    @PostMapping("/userFromTokenUnsafe")
     suspend fun userFromTokenUnsafe(@RequestBody request: TokenIn): ApiUserOut{
         val token = tokenRepo.findById(request.value).awaitFirstOrNull()
                 ?: return ApiUserOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
@@ -138,5 +135,15 @@ class UserApi(
         userRepo.save(user).awaitFirstOrNull()
 
         return read(SecureReadIn(id = request.id, requestorId = request.requestorId))
+    }
+
+    @PostMapping("/validateToken")
+    suspend fun validateToken(@RequestBody request: TokenIn): IdOut{
+        val token = tokenRepo.findById(request.value).awaitFirstOrNull()
+                ?: return IdOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
+
+        if (token.user == null) return IdOut(success = true)
+
+        return IdOut(success = true, id = token.user!!.id)
     }
 }

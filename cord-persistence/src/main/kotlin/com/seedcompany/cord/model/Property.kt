@@ -84,6 +84,7 @@ enum class PropName(val str: String) {
     UserDisplayLastName("displayLastName"),
     UserEducation("education"),
     UserEmail("email"),
+    UserPassword("password"),
     UserPhone("phone"),
     UserRealFirstName("realFirstName"),
     UserRealLastName("realLastName"),

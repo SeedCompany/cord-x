@@ -16,6 +16,7 @@ interface UserActiveReadOnly {
     fun getDisplayFirstName()
     fun getDisplayLastName()
     fun getEmail()
+    fun getPassword()
     fun getPhone()
     fun getRealFirstName()
     fun getRealLastName()
@@ -27,17 +28,18 @@ interface UserActiveReadOnly {
 
 @Node(labels = ["User", "BaseNode"])
 class User(
-        about: String?,
+        about: String? = null,
         displayFirstName: String?,
         displayLastName: String?,
         email: String?,
-        phone: String?,
-        realFirstName: String?,
-        realLastName: String?,
-        roles: MutableList<Role>?,
-        status: UserStatus?,
-        timezone: String?,
-        title: String?,
+        password: String? = null,
+        phone: String? = null,
+        realFirstName: String? = null,
+        realLastName: String? = null,
+        roles: MutableList<Role>? = null,
+        status: UserStatus? = null,
+        timezone: String? = null,
+        title: String? = null,
         @Relationship(type = "member", direction = Relationship.Direction.INCOMING)
         @JsonIgnore
         var membershipsGlobal: List<GlobalSecurityGroup> = listOf(),
@@ -119,6 +121,23 @@ class User(
             ) ?: field
         }
 
+    @Relationship(type = "password")
+    @JsonIgnore
+    var passwordH: MutableList<StringProp> = mutableListOf()
+
+    init {
+        passwordH.add(StringProp(value = password, labels = listOf(PropLabel.Property.name)))
+    }
+
+    var password = password
+        set(value) {
+            field = updateStringMember(
+                    password,
+                    passwordH,
+                    value,
+                    listOf(PropLabel.Property.name)
+            ) ?: field
+        }
 
     @Relationship(type = "phone")
     @JsonIgnore

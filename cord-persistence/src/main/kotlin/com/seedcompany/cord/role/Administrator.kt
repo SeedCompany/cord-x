@@ -12,6 +12,7 @@ object Administrator : IRole {
             PropName.UserDisplayFirstName to Perm.READ_WRITE_DELETE,
             PropName.UserDisplayLastName to Perm.READ_WRITE_DELETE,
             PropName.UserEmail to Perm.READ_WRITE_DELETE,
+            PropName.UserPassword to Perm.READ_WRITE_DELETE,
             PropName.UserPhone to Perm.READ_WRITE_DELETE,
             PropName.UserRealFirstName to Perm.READ_WRITE_DELETE,
             PropName.UserRealLastName to Perm.READ_WRITE_DELETE,
