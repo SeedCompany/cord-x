@@ -48,6 +48,25 @@ class User(
         var membershipsProject: List<ProjectSecurityGroup> = listOf(),
 ) : BaseNode() {
 
+    // create user from existing user but with a password hash
+    constructor(
+            user: User,
+            passwordHash: String,
+    ) : this(
+            about = user.about,
+            displayFirstName = user.displayFirstName,
+            displayLastName = user.displayLastName,
+            email = user.email,
+            password = passwordHash,
+            phone = user.phone,
+            realFirstName = user.realFirstName,
+            realLastName = user.realLastName,
+            roles = user.roles,
+            status = user.status,
+            timezone = user.timezone,
+            title = user.title,
+    )
+
     @Relationship(type = "about")
     @JsonIgnore
     var aboutH: MutableList<StringProp> = mutableListOf()
