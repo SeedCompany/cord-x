@@ -59,8 +59,6 @@ class UserApi(
                 user = apiUser
         )
 
-
-
         apiUser.about.value = if (grants[PropName.UserAbout]?.canRead == true) userDto.user.about else null
         apiUser.about.canRead = grants[PropName.UserAbout]?.canRead ?: false
         apiUser.about.canEdit = grants[PropName.UserAbout]?.canEdit ?: false

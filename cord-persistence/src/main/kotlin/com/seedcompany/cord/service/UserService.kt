@@ -50,7 +50,7 @@ class UserService(
     suspend fun read(@RequestBody request: ReadIn): UserOut {
         val user = userActiveReadOnlyRepo.findById(request.id).awaitFirstOrNull()
                 ?: return UserOut(message = "user not found", error = ErrorCode.ID_NOT_FOUND)
-        return UserOut(user, true)
+        return UserOut(user = user, success = true)
     }
 
     @PostMapping("/createRead")

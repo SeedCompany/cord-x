@@ -1,5 +1,6 @@
 package com.seedcompany.cord.dto
 
+import com.seedcompany.cord.model.User
 import java.time.ZonedDateTime
 
 class LoginGetCredsIn(
@@ -14,10 +15,15 @@ class PashOut(
         message: String? = null,
 ) : GenericOut(success, error, message)
 
+class RegisterIn(
+    val user: User,
+    val token: String,
+)
+
 class ResetPasswordIn(
         val emailToken: String,
         val email: String,
-        val passowrd: String,
+        val password: String,
 )
 class SetPasswordIn(
         val id: String,

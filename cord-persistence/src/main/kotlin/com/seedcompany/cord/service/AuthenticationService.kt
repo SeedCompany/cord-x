@@ -1,6 +1,8 @@
 package com.seedcompany.cord.service
 
 import com.seedcompany.cord.dto.*
+import com.seedcompany.cord.frontend.ApiSecureReadIn
+import com.seedcompany.cord.frontend.ApiUserOut
 import com.seedcompany.cord.model.EmailToken
 import com.seedcompany.cord.model.Token
 import com.seedcompany.cord.model.User
@@ -8,8 +10,10 @@ import com.seedcompany.cord.repository.EmailTokenRepository
 import com.seedcompany.cord.repository.TokenRepository
 import com.seedcompany.cord.repository.UserRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
+
 
 @RestController
 @RequestMapping("/authentication")
@@ -18,7 +22,21 @@ class AuthenticationService(
         val tokenRepo: TokenRepository,
         val userRepo: UserRepository,
         val userService: UserService,
+        val userApi: UserApi,
 ) {
+    val saltLength = 16 // salt length in bytes
+    val hashLength = 32 // hash length in bytes
+    val parallelism = 1 // currently not supported by Spring Security
+    val memory = 4096 // memory costs
+    val iterations = 3
+
+    val argon2PasswordEncoder = Argon2PasswordEncoder(
+            saltLength,
+            hashLength,
+            parallelism,
+            memory,
+            iterations)
+
     @PostMapping("/emailTokenCreate")
     @Transactional
     suspend fun emailTokenCreate(@RequestBody request: EmailTokenCreateIn): GenericOut {
@@ -77,6 +95,19 @@ class AuthenticationService(
         return PashOut(success = true, pash = user.password)
     }
 
+    @PostMapping("/register")
+    @Transactional
+    suspend fun register(@RequestBody request: RegisterIn): ApiUserOut {
+
+        val pash = argon2PasswordEncoder.encode(request.user.password)
+        val user = User(user = request.user, passwordHash = pash)
+        val savedUser = userRepo.save(user).awaitFirstOrNull()
+                ?: ApiUserOut(message = "something went wrong", error = ErrorCode.UNKNOWN_ERROR)
+        loginConnect(LoginGetCredsIn(token = request.token, email = user.email!!))
+
+        return userApi.read(ApiSecureReadIn(id = user.id, requestorId = user.id))
+    }
+
     @PostMapping("/resetPassword")
     @Transactional
     suspend fun resetPassword(@RequestBody request: ResetPasswordIn): GenericOut {
@@ -84,7 +115,7 @@ class AuthenticationService(
         val user = userRepo.findByEmail(request.email).awaitFirstOrNull()
                 ?: return PashOut(message = "user not found", error = ErrorCode.ID_NOT_FOUND)
 
-        user.password = request.passowrd
+        user.password = request.password
         userRepo.save(user).awaitFirstOrNull()
 
         return GenericOut(success = true)
