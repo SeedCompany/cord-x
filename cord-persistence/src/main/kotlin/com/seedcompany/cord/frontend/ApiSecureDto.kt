@@ -1,6 +1,6 @@
 package com.seedcompany.cord.frontend
 
-class SecureReadIn(
+class ApiSecureReadIn(
         val id: String,
         val requestorId: String?,
 )

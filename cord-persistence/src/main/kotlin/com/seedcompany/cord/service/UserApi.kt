@@ -24,39 +24,52 @@ class UserApi(
         val authorizationService: AuthorizationService,
 ) {
     @PostMapping("/read")
-    suspend fun read(@RequestBody request: SecureReadIn): ApiUserOut {
+    suspend fun read(@RequestBody request: ApiSecureReadIn): ApiUserOut {
 
         var grants: Map<PropName, Perm>
 
+        val userDto = userService.read(ReadIn(request.id))
+
+        val apiUser = ApiUser()
+        if (userDto.user == null) return ApiUserOut(
+                message = "user not found",
+                error = ErrorCode.ID_NOT_FOUND
+        )
+
+        apiUser.id = request.id
+        apiUser.createdAt = userDto.user.createdAt
+
         // if user isn't known, treat as anonymous request
-        if (request.requestorId == null) grants = AllRoles.grants(Role.Anonymous)
-            else {
-                // get global permissions of requester
-                grants = authorizationService.readGlobalPermissions(GlobalPermissionsIn((request.requestorId))).grants
-                        ?: return ApiUserOut(message = "something went wrong")
+        grants = if (request.requestorId == null) AllRoles.grants(Role.Anonymous)
+        else {
+            // get global permissions of requester
+            authorizationService.readGlobalPermissions(GlobalPermissionsIn((request.requestorId))).grants
+                    ?: return ApiUserOut(
+                            message = "something went wrong",
+                            error = ErrorCode.UNKNOWN_ERROR,
+                            user = apiUser
+                    )
         }
 
         // if the user is accessing their own profile, give them admin rights
         if (request.id == request.requestorId) grants = AllRoles.grants(Role.Administrator)
 
-        if (grants.isEmpty()) return ApiUserOut(message = "no grants available to this user")
+        if (grants.isEmpty()) return ApiUserOut(
+                message = "no grants available to this user",
+                user = apiUser
+        )
 
-        val userDto = userService.read(ReadIn(request.id))
-        if (userDto.user == null) return ApiUserOut(message = "user not found")
 
-        val apiUser = ApiUser()
-        apiUser.id = userDto.user.id
-        apiUser.createdAt = userDto.user.createdAt
 
-        apiUser.about.value = if (grants[PropName.UserAbout]?.canRead == true ) userDto.user.about else null
+        apiUser.about.value = if (grants[PropName.UserAbout]?.canRead == true) userDto.user.about else null
         apiUser.about.canRead = grants[PropName.UserAbout]?.canRead ?: false
         apiUser.about.canEdit = grants[PropName.UserAbout]?.canEdit ?: false
 
-        apiUser.displayFirstName.value = if (grants[PropName.UserDisplayFirstName]?.canRead == true ) userDto.user.displayFirstName else null
+        apiUser.displayFirstName.value = if (grants[PropName.UserDisplayFirstName]?.canRead == true) userDto.user.displayFirstName else null
         apiUser.displayFirstName.canRead = grants[PropName.UserDisplayFirstName]?.canRead ?: false
         apiUser.displayFirstName.canEdit = grants[PropName.UserDisplayFirstName]?.canEdit ?: false
 
-        apiUser.displayLastName.value = if (grants[PropName.UserDisplayLastName]?.canRead == true ) userDto.user.displayLastName else null
+        apiUser.displayLastName.value = if (grants[PropName.UserDisplayLastName]?.canRead == true) userDto.user.displayLastName else null
         apiUser.displayLastName.canRead = grants[PropName.UserDisplayLastName]?.canRead ?: false
         apiUser.displayLastName.canEdit = grants[PropName.UserDisplayLastName]?.canEdit ?: false
 
@@ -64,35 +77,35 @@ class UserApi(
         apiUser.education.canRead = true
         apiUser.education.canEdit = true
 
-        apiUser.email.value = if (grants[PropName.UserEmail]?.canRead == true ) userDto.user.email else null
+        apiUser.email.value = if (grants[PropName.UserEmail]?.canRead == true) userDto.user.email else null
         apiUser.email.canRead = grants[PropName.UserEmail]?.canRead ?: false
         apiUser.email.canEdit = grants[PropName.UserEmail]?.canEdit ?: false
 
-        apiUser.phone.value = if (grants[PropName.UserPhone]?.canRead == true ) userDto.user.phone else null
+        apiUser.phone.value = if (grants[PropName.UserPhone]?.canRead == true) userDto.user.phone else null
         apiUser.phone.canRead = grants[PropName.UserPhone]?.canRead ?: false
         apiUser.phone.canEdit = grants[PropName.UserPhone]?.canEdit ?: false
 
-        apiUser.realFirstName.value = if (grants[PropName.UserRealFirstName]?.canRead == true ) userDto.user.realFirstName else null
+        apiUser.realFirstName.value = if (grants[PropName.UserRealFirstName]?.canRead == true) userDto.user.realFirstName else null
         apiUser.realFirstName.canRead = grants[PropName.UserRealFirstName]?.canRead ?: false
         apiUser.realFirstName.canEdit = grants[PropName.UserRealFirstName]?.canEdit ?: false
 
-        apiUser.realLastName.value = if (grants[PropName.UserRealLastName]?.canRead == true ) userDto.user.realLastName else null
+        apiUser.realLastName.value = if (grants[PropName.UserRealLastName]?.canRead == true) userDto.user.realLastName else null
         apiUser.realLastName.canRead = grants[PropName.UserRealLastName]?.canRead ?: false
         apiUser.realLastName.canEdit = grants[PropName.UserRealLastName]?.canEdit ?: false
 
-        apiUser.roles.value = if (grants[PropName.UserRoles]?.canRead == true ) userDto.user.roles else null
+        apiUser.roles.value = if (grants[PropName.UserRoles]?.canRead == true) userDto.user.roles else null
         apiUser.roles.canRead = grants[PropName.UserRoles]?.canRead ?: false
         apiUser.roles.canEdit = grants[PropName.UserRoles]?.canEdit ?: false
 
-        apiUser.status.value = if (grants[PropName.UserStatus]?.canRead == true ) userDto.user.status else null
+        apiUser.status.value = if (grants[PropName.UserStatus]?.canRead == true) userDto.user.status else null
         apiUser.status.canRead = grants[PropName.UserStatus]?.canRead ?: false
         apiUser.status.canEdit = grants[PropName.UserStatus]?.canEdit ?: false
 
-        apiUser.timezone.value = if (grants[PropName.UserTimezone]?.canRead == true ) userDto.user.timezone else null
+        apiUser.timezone.value = if (grants[PropName.UserTimezone]?.canRead == true) userDto.user.timezone else null
         apiUser.timezone.canRead = grants[PropName.UserTimezone]?.canRead ?: false
         apiUser.timezone.canEdit = grants[PropName.UserTimezone]?.canEdit ?: false
 
-        apiUser.title.value = if (grants[PropName.UserTitle]?.canRead == true ) userDto.user.title else null
+        apiUser.title.value = if (grants[PropName.UserTitle]?.canRead == true) userDto.user.title else null
         apiUser.title.canRead = grants[PropName.UserTitle]?.canRead ?: false
         apiUser.title.canEdit = grants[PropName.UserTitle]?.canEdit ?: false
 
@@ -101,11 +114,11 @@ class UserApi(
     }
 
     @PostMapping("/userFromTokenUnsafe")
-    suspend fun userFromTokenUnsafe(@RequestBody request: ReadIn): ApiUserOut{
+    suspend fun userFromTokenUnsafe(@RequestBody request: ReadIn): ApiUserOut {
         val token = tokenRepo.findById(request.id).awaitFirstOrNull()
                 ?: return ApiUserOut(message = "token not found", error = ErrorCode.ID_NOT_FOUND)
         if (token.user == null) return ApiUserOut(message = "token not in use")
-        return read(SecureReadIn(id = token.user!!.id, requestorId = token.user!!.id))
+        return read(ApiSecureReadIn(id = token.user!!.id, requestorId = token.user!!.id))
     }
 
     @PostMapping("/update")
@@ -134,7 +147,7 @@ class UserApi(
 
         userRepo.save(user).awaitFirstOrNull()
 
-        return read(SecureReadIn(id = request.id, requestorId = request.requestorId))
+        return read(ApiSecureReadIn(id = request.id, requestorId = request.requestorId))
     }
 
 }
