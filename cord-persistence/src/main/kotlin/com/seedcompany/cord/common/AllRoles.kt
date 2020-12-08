@@ -1,11 +1,44 @@
 package com.seedcompany.cord.common
 
 import com.seedcompany.cord.model.Perm
+import com.seedcompany.cord.model.Power
 import com.seedcompany.cord.model.PropName
 import com.seedcompany.cord.model.Role
 import com.seedcompany.cord.role.*
 
 object AllRoles {
+    fun powers(role: Role): List<Power>{
+        when (role) {
+            Role.Administrator -> return Administrator.powers()
+            Role.Anonymous -> return Anonymous.powers()
+            Role.BibleTranslationLiaison -> return BibleTranslationLiaison.powers()
+            Role.Consultant -> return Consultant.powers()
+            Role.ConsultantManager -> return ConsultantManager.powers()
+            Role.Controller -> return Controller.powers()
+            Role.CordUser -> return CordUser.powers()
+            Role.Development -> return Development.powers()
+            Role.ExecutiveDevelopmentRepresentative -> return ExecutiveDevelopmentRepresentative.powers()
+            Role.ExecutiveLeadership -> return ExecutiveLeadership.powers()
+            Role.FieldOperationsDirector -> return FieldOperationsDirector.powers()
+            Role.FieldPartner -> return FieldPartner.powers()
+            Role.FinancialAnalyst -> return FinancialAnalyst.powers()
+            Role.Fundraising -> return Fundraising.powers()
+            Role.Intern -> return Intern.powers()
+            Role.LeadFinancialAnalyst -> return LeadFinancialAnalyst.powers()
+            Role.Leadership -> return Leadership.powers()
+            Role.Liason -> return Liason.powers()
+            Role.Marketing -> return Marketing.powers()
+            Role.Mentor -> return Mentor.powers()
+            Role.OfficeOfThePresident -> return OfficeOfThePresident.powers()
+            Role.ProjectManager -> return ProjectManager.powers()
+            Role.RegionalCommunicationsCoordinator -> return RegionalCommunicationsCoordinator.powers()
+            Role.RegionalDirector -> return RegionalDirector.powers()
+            Role.StaffMember -> return StaffMember.powers()
+            Role.SupportingProjectManager -> return SupportingProjectManager.powers()
+            Role.Translator -> return Translator.powers()
+            Role.Writer -> return Writer.powers()
+        }
+    }
     fun grants(role: Role): Map<PropName, Perm>{
         when (role) {
             Role.Administrator -> return Administrator.grants()

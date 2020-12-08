@@ -48,6 +48,7 @@ class AdminService(
             if (sg == null) {
                 val newSg = GlobalSecurityGroup(
                         role = Role.valueOf(it.name),
+                        powers = AllRoles.powers(Role.valueOf(it.name)),
                         grants = AllRoles.grants(Role.valueOf(it.name)),
                         members = mutableListOf()
                 )

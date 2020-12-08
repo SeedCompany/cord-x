@@ -1,12 +1,10 @@
 package com.seedcompany.cord.role
 
-import com.seedcompany.cord.model.Role
-import com.seedcompany.cord.model.IRole
-import com.seedcompany.cord.model.Perm
-import com.seedcompany.cord.model.PropName
+import com.seedcompany.cord.model.*
 
 object OfficeOfThePresident : IRole {
     override fun name() = Role.OfficeOfThePresident
+    override fun powers() = listOf<Power>()
     override fun grants() = mapOf(
             PropName.UserAbout to Perm.READ_WRITE_DELETE,
             PropName.UserDisplayFirstName to Perm.READ_WRITE_DELETE,

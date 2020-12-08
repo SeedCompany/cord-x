@@ -4,6 +4,7 @@ import org.springframework.data.neo4j.core.schema.Node
 
 interface IRole {
     fun name(): Role
+    fun powers(): List<Power>
     fun grants(): Map<PropName, Perm>
 }
 
