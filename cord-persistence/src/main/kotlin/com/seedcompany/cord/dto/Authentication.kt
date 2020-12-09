@@ -1,5 +1,7 @@
 package com.seedcompany.cord.dto
 
+import com.seedcompany.cord.frontend.ApiUser
+import com.seedcompany.cord.model.Power
 import com.seedcompany.cord.model.User
 import java.time.ZonedDateTime
 
@@ -19,6 +21,14 @@ class RegisterIn(
     val user: User,
     val token: String,
 )
+
+class RegisterOut(
+        val user: ApiUser? = null,
+        val powers: List<Power>? = null,
+        success: Boolean = false,
+        error: ErrorCode = ErrorCode.NO_ERROR,
+        message: String? = null,
+) : GenericOut(success, error, message)
 
 class ResetPasswordIn(
         val emailToken: String,

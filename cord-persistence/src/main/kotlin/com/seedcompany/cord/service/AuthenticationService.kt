@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/authentication")
 class AuthenticationService(
+        val authorizationService: AuthorizationService,
         val emailTokenRepo: EmailTokenRepository,
         val tokenRepo: TokenRepository,
         val userRepo: UserRepository,
@@ -97,7 +98,7 @@ class AuthenticationService(
 
     @PostMapping("/register")
     @Transactional
-    suspend fun register(@RequestBody request: RegisterIn): ApiUserOut {
+    suspend fun register(@RequestBody request: RegisterIn): RegisterOut {
 
         val pash = argon2PasswordEncoder.encode(request.user.password)
         val user = User(user = request.user, passwordHash = pash)
@@ -105,7 +106,9 @@ class AuthenticationService(
                 ?: ApiUserOut(message = "something went wrong", error = ErrorCode.UNKNOWN_ERROR)
         loginConnect(LoginGetCredsIn(token = request.token, email = user.email!!))
 
-        return userApi.read(ApiSecureReadIn(id = user.id, requestorId = user.id))
+        val apiUser = userApi.read(ApiSecureReadIn(id = user.id, requestorId = user.id))
+        val powersOut = authorizationService.getPowers(ReadIn(id = user.id))
+        return RegisterOut(user = apiUser.user, powers = powersOut.powers, success = true)
     }
 
     @PostMapping("/resetPassword")
